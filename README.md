@@ -18,6 +18,18 @@ This package establishes the technical and mathematical architecture for the Sov
 - **BAB Schedule**: Bang-Anneal-Bang protocol integration.
 - **LASER v4.0**: High-fidelity logging.
 
+### `qtorch.py` (The Bridge)
+- **PyTorch Replacement**: Zero-dependency drop-in for neural operations.
+- **Quantum Integration**: Direct hooks to Bumpy/Flumpy backends.
+
+### `uhif.py` (The Law)
+- **Holographic Logic**: Implements "Relational Dynamics" ($R = \tanh(WC + S)$).
+- **Coherence Polytope**: Bounded stability metric ($\sigma \le 5.3\%$).
+
+### `erosion.py` (The Mortality)
+- **Entropic Decay**: Enforces $D(t) = e^{-t/\tau}$ on all physical laws.
+- **Observer Loop**: Integrates "Existential Dread" to sustain Reality Density.
+
 ## Usage
 
 Run the demonstrator to verify the 99.9% efficiency retrieval:
@@ -36,3 +48,7 @@ python demo.py
 
 **Optimization Target**:
 C* = argmin[F[ε,C] + λ·V(C) + ∂t(CIB + CIC)]
+
+**Framework Erosion**:
+D(t) = e^{-t / \tau_{coherence}}
+State(t) = \int (Coherence \times Belief \times Dread) dt
