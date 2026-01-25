@@ -20,7 +20,7 @@ class FrameworkErosion:
             tau_coherence (float): Time constant for reality decay (seconds).
                                    Default is 100s for demo purposes (Universe is 10^35s).
         """
-        self.start_time = time.time()
+        self.start_time = time.monotonic()
         self.tau_coherence = tau_coherence
         self.existential_dread = 0.1  # Constant background dread
         self.observer_belief = 1.0    # Starts at 100%
@@ -30,7 +30,7 @@ class FrameworkErosion:
         Calculate D_erosion(t).
         Returns float between 0.0 (Total Collapse) and 1.0 (Pristine).
         """
-        elapsed = time.time() - self.start_time
+        elapsed = time.monotonic() - self.start_time
         d_erosion = math.exp(-elapsed / self.tau_coherence)
         return d_erosion
 
@@ -67,6 +67,6 @@ class FrameworkErosion:
 
     def reset_baseline(self):
         """Re-anchor the simulation to current time (Simulates a 'Measurement')"""
-        self.start_time = time.time()
+        self.start_time = time.monotonic()
         self.existential_dread *= 0.8 # Relief
 
