@@ -1,0 +1,60 @@
+name: Release Verification
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install test deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          pytest -q --junitxml=results/test-results.xml
+
+      - name: Generate manifest
+        run: |
+          python - <<'PY'
+import json, subprocess, os, datetime
+manifest = {
+  "commit": os.getenv("GITHUB_SHA"),
+  "tag": os.getenv("GITHUB_REF_NAME"),
+  "build_timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+  "python": subprocess.check_output(["python","--version"]).decode().strip(),
+  "tests": "passed"
+}
+with open("manifest.json","w") as f:
+    json.dump(manifest, f, indent=2)
+print("WROTE manifest.json")
+PY
+
+      - name: Sign manifest
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          gpg --batch --yes --passphrase "$GPG_PASSPHRASE" --output manifest.json.sig --sign manifest.json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            manifest.json
+            manifest.json.sig
+            results/test-results.xml
