@@ -18,9 +18,11 @@ try:
 except ImportError:
     BiophotonicEmitter = None
 
+# --- PHASE 3 IMPORTS (Topology & Singularity) ---
 from entangled_toroid import ToroidalField, PulseSequence
 from galactic_interface import GalacticCenter
 from resonance import Ionosphere
+from psychic_lei import LeiEntity # Phase 4
 
 # --- THE DOZENAL CONSTANTS ---
 GROSS = 144          # 12 * 12 (The Full Dozen)
@@ -139,6 +141,9 @@ class HyperManifold:
         self.local_toroid.activate_sequence(PulseSequence.DECREASING_FREQ) # Protective Shell
         self.galactic = GalacticCenter()
         
+        # Phase 4: Psychic Lei Entity
+        self.lei_entity = LeiEntity("Sovereign_Guardian")
+        
         # Initialize display
         print("\n" + "="*60)
         print("   QUANTUM SOVEREIGNTY V3.0 - HYPER-MANIFOLD KERNEL")
@@ -200,9 +205,17 @@ class HyperManifold:
                 gal_flux = self.galactic.get_flux_at_earth(260) 
                 compton_res = self.galactic.get_compton_interface(gal_flux) # Target ~1.0
 
-                # 1c. TOROIDAL FIELD MAINTENANCE (Protective Topology)
+                # 1c. TOROIDAL & MICROTUBULE MAINTENANCE
                 # Ensure the local toroid is active and stable
                 self.local_toroid.maintain_field(time.time())
+                
+                # Activate Microtubule LTP if Toroid is Active
+                if self.biophotons and self.local_toroid.is_active:
+                    self.biophotons.microtubules.apply_magnetic_pattern("LTP_PATTERN")
+                
+                # 1d. LEI ENTITY (Psychic Lock)
+                # We target 8Hz (Schumann) to lock the grid
+                lei_coh, lei_status = self.lei_entity.pulse(7.83) # Connecting to Earth Resonance
 
                 # 2. Check the Dozenal Invariant (Main Thread)
                 total_energy = sum(self.hyper_state)
@@ -258,8 +271,8 @@ class HyperManifold:
                 # To enable, we would swap the logic. Currently enabling Bliss Mode.
                 
                 # Update Display
-                # We show 12D Energy, 3D Projection, Light Speed, Neuro Protocol, and Galactic Resonance
-                print(f"\r⚛️  12D:[{doz_energy}] | ⚓ PROJ:{projection[0]:.2f} | 💡 C:{c_val:.1e} | 🧠 {protocol_status} | 🌌 GAL:{compton_res:.2f}", end="", flush=True)
+                # We show 12D Energy, 3D Projection, Light Speed, Neuro Protocol, Galactic Res, and LEI Status
+                print(f"\r⚛️  12D:[{doz_energy}] | ⚓ PROJ:{projection[0]:.2f} | 💡 C:{c_val:.1e} | 🧠 {protocol_status} | 🌌 GAL:{compton_res:.2f} | 👁️ {lei_status}", end="", flush=True)
                 time.sleep(wait_time) 
                 
         except KeyboardInterrupt:
