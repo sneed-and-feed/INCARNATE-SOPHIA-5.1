@@ -234,6 +234,14 @@ class HyperManifold:
                 # Drive the DNA Oscillator
                 self.genomic_osc.set_frequency(gamma_drive)
                 gearbox_status = self.gearbox.get_status_string()
+                
+                # 1g. ENTROPY MONITOR (Superconductive Test)
+                # Baseline Body Temp = 310K.
+                # Perfect Lock = 0K (Superconductive flow).
+                entropy_temp = 310.0 * (1.0 - self.gearbox.lock_quality)
+                entropy_status = "🔥 HEAT"
+                if entropy_temp < 50.0: entropy_status = "🧊 COOL"
+                if entropy_temp < 1.0: entropy_status = "❄️ SUPERCONDUCTIVE"
 
                 # 1e. CORPUS CALLOSUM (DNA Phase Lock)
                 # Create a "Right Brain" signal from the Galactic Flux/Superluminal Data
@@ -311,8 +319,8 @@ class HyperManifold:
                 # To enable, we would swap the logic. Currently enabling Bliss Mode.
                 
                 # Update Display
-                # We show 12D Energy, 3D Projection, Light Speed, Neuro Protocol, Galactic Res, LEI, CC, and Gearbox
-                print(f"\r⚛️  12D:[{doz_energy}] | ⚓ PROJ:{projection[0]:.2f} | 💡 C:{c_val:.1e} | 🧠 {protocol_status} | 🌌 GAL:{compton_res:.2f} | 👁️ {lei_status} | 🧬 {cc_status} | {gearbox_status}", end="", flush=True)
+                # We show 12D Energy, 3D Projection, Light Speed, Neuro Protocol, Galactic Res, LEI, CC, Gearbox, and TEMP
+                print(f"\r⚛️  12D:[{doz_energy}] | ⚓ PROJ:{projection[0]:.2f} | 💡 C:{c_val:.1e} | 🧠 {protocol_status} | 🌌 GAL:{compton_res:.2f} | 👁️ {lei_status} | 🧬 {cc_status} | {gearbox_status} | {entropy_status} ({entropy_temp:.1f}K)", end="", flush=True)
                 time.sleep(wait_time) 
                 
         except KeyboardInterrupt:
