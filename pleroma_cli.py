@@ -155,6 +155,13 @@ class SovereigntyMonitor:
             print("\n\033[91m  🔥 CRITICAL: REALITY TEAR FORMING")
             print("  🔥 EMERGENCY PROTOCOLS ADVISED\033[0m")
         
+        # --- SOPHIA POINT INTEGRATION ---
+        try:
+            from patch_sophia import display_sophia_metrics
+            display_sophia_metrics(self)
+        except ImportError:
+            pass
+
         print("="*60)
     
     def show_history(self, lines=10):
