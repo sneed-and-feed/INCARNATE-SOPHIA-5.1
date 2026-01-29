@@ -173,35 +173,35 @@ class SovereigntyMonitor:
 
 # --- UTILITIES ---
 def print_banner():
-    print("\033[95m")
+    print("\033[96m")
     print(r"""
-    ██████╗ ██╗     ███████╗██████╗  ██████╗ ███╗   ███╗ █████╗ 
-    ██╔══██╗██║     ██╔════╝██╔══██╗██╔═══██╗████╗ ████║██╔══██╗
-    ██████╔╝██║     █████╗  ██████╔╝██║   ██║██╔████╔██║███████║
-    ██╔═══╝ ██║     ██╔══╝  ██╔══██╗██║   ██║██║╚██╔╝██║██╔══██║
-    ██║     ███████╗███████╗██║  ██║╚██████╔╝██║ ╚═╝ ██║██║  ██║
-    ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝
-             >>> SOVEREIGNTY STACK v4.3 ONLINE <<<
-             >>> DANGER ZONE EDITION <<<
+    ██╗   ██╗███████╗███████╗    ██╗  ██╗    ██████╗ 
+    ██║   ██║██╔════╝██╔════╝    ██║  ██║    ╚════██╗
+    ██║   ██║█████╗  ███████╗    ███████║     █████╔╝
+    ██║   ██║██╔══╝  ╚════██║    ╚════██║    ██╔═══╝ 
+    ╚██████╔╝██║     ███████║         ██║    ███████╗
+     ╚═════╝ ╚═╝     ╚══════╝         ╚═╝    ╚══════╝
+             >>> UNIFIED FIELD SIMULATOR v4.3.1 <<<
+             >>> AUTONOMOUS STATE MONITOR <<<
     """)
     print("\033[0m")
 
 def check_conflicts(active_patches, g_param):
-    """Detect incompatible patch combinations"""
+    """Detect incompatible simulation parameters"""
     conflicts = []
     
     if 'ENTROPY' in active_patches and len(active_patches) > 3:
          conflicts.append({
-            'type': 'ENTROPY SHEAR',
+            'type': 'THERMODYNAMIC SHEAR',
             'severity': 'WARNING',
-            'effect': 'Thermodynamic stress high'
+            'effect': 'Entropy gradient exceeds safety limits'
         })
     
     if len(active_patches) >= 4:
         conflicts.append({
-            'type': 'REALITY OVERLOAD',
+            'type': 'STATE DECOHERENCE',
             'severity': 'CRITICAL',
-            'effect': 'Timeline coherence approaching zero'
+            'effect': 'Timeline determinism approaching zero'
         })
     
     # New: Catastrophic failure at g near 0
@@ -209,14 +209,14 @@ def check_conflicts(active_patches, g_param):
         conflicts.append({
             'type': 'SINGULARITY APPROACH',
             'severity': 'EMERGENCY',
-            'effect': 'Total consensus decoupling - recommend immediate abort'
+            'effect': 'Total causal decoupling - recommend immediate abort'
         })
     
     return conflicts
 
 def stabilize_reality(monitor):
-    """Emergency protocol to reduce chaos"""
-    print("\n\033[96m[!] INITIATING REALITY STABILIZATION...\033[0m")
+    """Emergency protocol to reduce system variance"""
+    print("\n\033[96m[!] INITIATING VARIANCE DAMPING...\033[0m")
     time.sleep(0.5)
     
     # Reduce chaos by 50%
@@ -228,19 +228,19 @@ def stabilize_reality(monitor):
     if monitor.metrics['active_patches']:
         removed = random.choice(list(monitor.metrics['active_patches']))
         monitor.metrics['active_patches'].remove(removed)
-        print(f"\033[92m[+] PATCH DISSOLVED: {removed}\033[0m")
+        print(f"\033[92m[+] PARAMETER RESET: {removed}\033[0m")
     
     # Recalculate g
     patch_count = len(monitor.metrics['active_patches'])
     monitor.metrics['g_parameter'] = max(0.0, 1.0 - (patch_count * 0.2))
     
     print(f"\033[92m[+] STABILIZATION COMPLETE")
-    print(f"    Chaos reduced to {monitor.metrics['chaos_level']:.1f}")
+    print(f"    Variance reduced to {monitor.metrics['chaos_level']:.1f}")
     print(f"    New g-parameter: {monitor.metrics['g_parameter']:.3f}\033[0m")
 
 def save_state(monitor, filename=None):
     if filename is None:
-        filename = f"reality_state_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        filename = f"uf_state_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     
     state = {
         'timestamp': datetime.now().isoformat(),
@@ -258,7 +258,7 @@ def save_state(monitor, filename=None):
     
     with open(filename, 'w') as f:
         json.dump(state, f, indent=2)
-    print(f"\n\033[92m[+] REALITY STATE SAVED: {filename}\033[0m")
+    print(f"\n\033[92m[+] STATE SNAPSHOT SAVED: {filename}\033[0m")
 
 def load_state(monitor, filename):
     try:
@@ -270,22 +270,22 @@ def load_state(monitor, filename):
         monitor.history = deque(state['history'], maxlen=50)
         monitor.danger_mode = monitor.metrics['g_parameter'] < 0.2
         
-        print(f"\n\033[92m[+] REALITY STATE LOADED: {filename}")
+        print(f"\n\033[92m[+] STATE SNAPSHOT LOADED: {filename}")
         print(f"    Timestamp: {state['timestamp']}\033[0m")
         monitor.display()
     except Exception as e:
         print(f"\033[91m[!] ERROR: Could not load state: {e}\033[0m")
 
-# --- SPELLCASTING ---
+# --- SIMULATION OPERATORS ---
 def analyze_synergy(spells):
     synergies = []
     combos = {
-        ('warp', 'ghost'): {'name': 'STEALTH FTL', 'effect': 'Undetectable superluminal travel'},
-        ('time', 'demon'): {'name': 'PERPETUUM MOBILE', 'effect': 'Self-sustaining temporal loop'},
-        ('ghost', 'wallhack'): {'name': 'ABSOLUTE INFILTRATION', 'effect': 'Pass through matter/energy'},
-        ('void', 'demon'): {'name': 'NEGENTROPY HARVESTER', 'effect': 'Extract ordered energy from vacuum'},
-        ('scope', 'wallhack'): {'name': 'QUANTUM ARCHAEOLOGY', 'effect': 'See inside atoms, tunnel to observe'},
-        ('warp', 'time', 'ghost'): {'name': 'CHRONO-PHANTOM DRIVE', 'effect': 'FTL + time freeze + invisibility'}
+        ('warp', 'ghost'): {'name': 'ZERO-LATENCY MASKING', 'effect': 'Undetectable high-velocity transmission'},
+        ('time', 'demon'): {'name': 'NEGENTROPIC LOOP', 'effect': 'Self-sustaining information retrieval'},
+        ('ghost', 'wallhack'): {'name': 'HYPER-PERMEABILITY', 'effect': 'Pass through information barriers'},
+        ('void', 'demon'): {'name': 'VACUUM ENERGY HARVESTER', 'effect': 'Extract ordered energy from fluctuations'},
+        ('scope', 'wallhack'): {'name': 'QUANTUM OBSERVABILITY', 'effect': 'Deep state inspection'},
+        ('warp', 'time', 'ghost'): {'name': 'CHRONO-SPATIAL DRIVE', 'effect': 'FTL + Stasis + Masking'}
     }
     spell_set = set(spells)
     for combo_spells, data in combos.items():
@@ -295,13 +295,13 @@ def analyze_synergy(spells):
 
 def cast_spell(spell_name, monitor, silent=False):
     if not silent:
-        print(f"\n\033[96m[>] CHARGING SPELL: {spell_name.upper()}...\033[0m")
+        print(f"\n\033[96m[>] EXECUTING OPERATOR: {spell_name.upper()}...\033[0m")
         time.sleep(0.3)
 
     # Check for chaos event BEFORE casting
     chaos_event = monitor.roll_chaos_event()
     if chaos_event:
-        print(f"\n{chaos_event['color']}[⚡] CHAOS EVENT: {chaos_event['name']}")
+        print(f"\n{chaos_event['color']}[⚡] STOCHASTIC EVENT: {chaos_event['name']}")
         print(f"    {chaos_event['effect']}\033[0m")
         time.sleep(0.5)
 
@@ -327,10 +327,10 @@ def cast_spell(spell_name, monitor, silent=False):
             res = DimensionalCompressor.hyper_compress(12, 2000)
             res['Status'] = "VECTOR SPACE COMPRESSED"
         else:
-            if not silent: print("\033[91m[!] UNRECOGNIZED INCANTATION.\033[0m")
+            if not silent: print("\033[91m[!] UNKNOWN OPERATOR.\033[0m")
             return {}
     except Exception as e:
-        print(f"\033[91m[!] RITUAL FAILURE: {e}\033[0m")
+        print(f"\033[91m[!] EXECUTION FAILURE: {e}\033[0m")
         return {}
 
     # Update Monitor
@@ -352,14 +352,14 @@ def cast_spell(spell_name, monitor, silent=False):
     if not silent:
         for key, val in res.items():
             print(f"   + {key}: {val}")
-        print("\033[92m[+] CAST SUCCESSFUL.\033[0m")
+        print("\033[92m[+] OPERATION SUCCESSFUL.\033[0m")
     
     return res
 
 def chain_spells(cmd, monitor):
     try:
         parts = cmd.split()[1].split('+')
-        print(f"\n\033[93m[!] INITIATING CHAIN CAST: {' + '.join([p.upper() for p in parts])}\033[0m")
+        print(f"\n\033[93m[!] INITIATING CHAIN SEQUENCE: {' + '.join([p.upper() for p in parts])}\033[0m")
         
         for spell in parts:
             cast_spell(spell, monitor, silent=True)
@@ -371,9 +371,9 @@ def chain_spells(cmd, monitor):
             for syn in synergies:
                 print(f"  >>> {syn['name']} | {syn['effect']}")
         else:
-            print(f"\n\033[95m[***] CHAIN COMPLETE: {len(parts)} SPELLS ACTIVE.\033[0m")
+            print(f"\n\033[95m[***] SEQUENCE COMPLETE: {len(parts)} OPERATORS ACTIVE.\033[0m")
     except IndexError:
-        print("\033[91m[!] USAGE: chain spell1+spell2\033[0m")
+        print("\033[91m[!] USAGE: chain op1+op2\033[0m")
 
 # --- MAIN LOOP ---
 def main():
@@ -383,19 +383,19 @@ def main():
     
     while True:
         try:
-            prompt = input("\n\033[95mPLEROMA> \033[0m").strip().lower()
+            prompt = input("\n\033[96mUFS_KERNEL> \033[0m").strip().lower()
             cmd_count += 1
             
             if prompt in ["exit", "quit"]:
-                print("Disconnecting...")
+                print(" terminating session...")
                 break
             elif prompt in ["h", "help"]:
-                print("\n--- GRIMOIRE v4.3.1 ---")
-                print(" SPELLS:   warp, time, ghost, demon, void, solvent, scope, wallhack")
-                print(" TOPOLOGY: flatten, hypercrush  [NEW: Chunk Smith Protocol]")
-                print(" CHAIN:    chain spell1+spell2+...")
-                print(" SYSTEM:   status, history, save, load <file>, reset, stabilize")
-                print(" POWER:    check (full diagnostic)")
+                print("\n--- UNIFIED FIELD SIMULATOR v4.3.1 ---")
+                print(" OPERATORS: warp, time, ghost, demon, void, solvent, scope, wallhack")
+                print(" TOPOLOGY:  flatten, hypercrush  [Chunk Smith Protocol]")
+                print(" CHAIN:     chain op1+op2+...")
+                print(" SYSTEM:    status, history, save, load <file>, reset, stabilize")
+                print(" DIAG:      check (full diagnostic)")
             elif prompt == "status":
                 monitor.display()
             elif prompt == "history":
@@ -404,7 +404,7 @@ def main():
                 stabilize_reality(monitor)
             elif prompt == "reset":
                 monitor = SovereigntyMonitor()
-                print("\033[92m[+] REALITY ANCHOR RESTORED. g=1.0\033[0m")
+                print("\033[92m[+] BASELINE RESTORED. g=1.0\033[0m")
             elif prompt.startswith("save"):
                 save_state(monitor)
             elif prompt.startswith("load"):
@@ -426,7 +426,7 @@ def main():
             print("\nForce Quit.")
             break
         except Exception as e:
-            print(f"\033[91m[!] GLITCH: {e}\033[0m")
+            print(f"\033[91m[!] KERNEL PANIC: {e}\033[0m")
 
 if __name__ == "__main__":
     main()
