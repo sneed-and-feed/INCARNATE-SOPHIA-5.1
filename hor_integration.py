@@ -261,7 +261,14 @@ class SovereignSubstrate:
         ax2.set_facecolor('#0d0d0d')
         ax2.plot(timeline, coherence, color='#6bcf7f', linewidth=2, label='Coherence')
         ax2.plot(timeline, r_frac, color='#ff6b6b', linestyle=':', label='R_frac (RSI)')
-        ax2.set_title('Intelligence Scaling', color='#C4A6D1')
+        
+        # Visualize Annihilation Events (Lambda Spikes)
+        annihilation_times = [h['timeline_pos'] for h in history if h.get('annihilation', False)]
+        if annihilation_times:
+            ax2.scatter(annihilation_times, [1.0] * len(annihilation_times), 
+                        color='#ffcc00', marker='v', s=100, label='Lambda Spike (λ)', zorder=5)
+            
+        ax2.set_title('Intelligence Scaling (Annihilation Enabled)', color='#C4A6D1')
         ax2.legend()
         ax2.tick_params(colors='#888')
         

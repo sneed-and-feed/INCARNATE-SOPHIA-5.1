@@ -22,8 +22,8 @@ from tools import thermal_shunt
 from alpha_engine import AlphaEngine
 from tick_feeder import TickFeeder
 
-# --- SIGNAL MONITOR (QUANT-ALPHA v1.0) ---
-class SignalMonitor:
+# --- SOVEREIGNTY MONITOR (QUANT-ALPHA v1.1) ---
+class SovereigntyMonitor:
     """
     Maintains the quantitative attribution state.
     Tracked Metrics: SNR, rho (Autocorrelation), flux (Entropy), Alpha.
@@ -37,7 +37,8 @@ class SignalMonitor:
             'signal_stability': 100.0,
             'entropy_flux': 0.0,          # Legacy: chaos_level
             'alpha': 1.0,                 # Legacy: potentia
-            'sigma_map': 0.0
+            'sigma_map': 0.0,
+            'annihilation_events': 0
         }
         self.alpha_engine = AlphaEngine()
         self.tick_feeder = TickFeeder()
@@ -70,6 +71,9 @@ class SignalMonitor:
                 self.metrics['active_patches'].add('GRAVITY')
             if any(x in spell_name for x in ['scope', 'wallhack']):
                 self.metrics['active_patches'].add('PLANCK')
+            if spell_name == 'burn':
+                self.metrics['active_patches'].add('ANNIHILATION')
+                self.metrics['annihilation_events'] += 1
             
             # Calculate g-parameter (0 = full Sovereignty)
             patch_count = len(self.metrics['active_patches'])
@@ -454,6 +458,16 @@ def cast_spell(spell_name, monitor, silent=False):
         elif spell_name == "scope": res = ScenarioLibrary.planck_scope(1e-12)
         elif spell_name == "wallhack": res = ScenarioLibrary.quantum_tunneling_boost(1e-9, 9.1e-31)
         
+        # ANNIHILATION (λ)
+        elif spell_name == "burn":
+            from antimatter_annihilator import Annihilator
+            purge = Annihilator()
+            energy = purge.calculate_purge_energy(1e-30, 1e-30, vibe='good', g=monitor.metrics['g_parameter'])
+            res = {'Pulse_Energy': f"{energy:.2e} J", 'Status': 'SOVEREIGNTY RESET'}
+            # Immediate Coherence Boost
+            monitor.metrics['timeline_coherence'] = 100.0
+            monitor.metrics['chaos_level'] = 0.0
+            
         # v4.3.1 TOPOLOGY SPELLS
         elif spell_name == "flatten":
             from dimensional_compressor import DimensionalCompressor
@@ -542,6 +556,7 @@ def main():
             elif prompt in ["h", "help"]:
                 print("\n--- GRIMOIRE v4.3.1 (PROJECT LOOM) ---")
                 print(" SPELLS:   warp, time, ghost, demon, void, solvent, scope, wallhack")
+                print(" POWER:    burn (λ - Annihilation Purge)")
                 print(" DREAM:    dream (Access Nyx Subconscious)")
                 print(" TOPOLOGY: flatten, hypercrush  [NEW: Chunk Smith Protocol]")
                 print(" ORACLE:   oracle <nominal|elevated|critical> [Mnemosyne Suite]")
