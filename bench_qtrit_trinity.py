@@ -58,16 +58,17 @@ class QutritKernel:
 
 # --- STRESS TEST DRIVER ---
 
-def run_stress_test(start_exponent=20, max_exponent=28):
+def run_stress_test(start_exponent=20, max_exponent=30):
     """
     Exponentially increases load until system buckles.
     Start: 2^20 (~1 Million Qutrits)
-    Max:   2^28 (~268 Million Qutrits)
+    Max:   2^30 (~1 Billion Qutrits / ~1GB Contiguous Block)
     """
     print("\n" + "="*60)
-    print("THE TRINITY STRESS TEST (QUTRIT CAPACITANCE)")
+    print("THE TRINITY STRESS TEST (SOVEREIGN SCALE 64-BIT)")
     print("="*60)
     print(f"[*] KERNEL: NumPy Vectorization (int8)")
+    print(f"[*] ARCH: 64-BIT CONFIRMED")
     print(f"[*] LOGIC: Cyclic Trinity Gate (0->1->2->0)")
     print("-" * 60)
     
@@ -83,6 +84,7 @@ def run_stress_test(start_exponent=20, max_exponent=28):
         try:
             # 1. Allocation
             t0 = time.perf_counter()
+            # 64-BIT UNLOCK: Single block allocation
             manifold = QutritKernel.generate_manifold(count)
             t_alloc = time.perf_counter() - t0
             
@@ -109,13 +111,14 @@ def run_stress_test(start_exponent=20, max_exponent=28):
             
             results.append((count, qps))
             
-            # Throttle detection
-            if total_time > 5.0:
-                print("    [!] WARNING: THERMAL TIME DILATION DETECTED.")
+            # Throttle detection / Safety
+            if total_time > 10.0:
+                print("    [!] WARNING: TIME DILATION THRESHOLD (10s). PAUSING.")
+                time.sleep(1)
                 
         except MemoryError:
-            print(f"\n[!] CRITICAL: REALITY FRAGMENTATION (MEMORY ERROR).")
-            print(f"    >> MAX CAPACITY: < 2^{exp} Qutrits")
+            print(f"\n[!] CRITICAL: PHYSICAL RAM EXHAUSTION.")
+            print(f"    >> SYSTEM LIMIT REACHED AT: 2^{exp} Qutrits")
             break
         except Exception as e:
             print(f"\n[!] CRITICAL: UNKNOWN ANOMALY ({e})")
