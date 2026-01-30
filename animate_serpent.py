@@ -91,8 +91,8 @@ def animate_serpent(size=64, interval=1, show_metrics=True):
     
     ax_main.set_facecolor('#050505')
     ax_main.set_title(
-        f"THE SERPENT COIL | {phase_name.upper()} {icon}", 
-        color='#C4A6D1', fontsize=18, pad=35,
+        f"THE SERPENT COIL (g=0 Locality Map) | {size}x{size} | {phase_name.upper()} {icon}", 
+        color='#C4A6D1', fontsize=22, pad=45, # Enlarged and refined
         fontproperties=cuneiform_font # FORCE SOVEREIGN FONT
     )
     # FORCED SQUARE ALIGNMENT: adjustable='box' ensures title centers over the square
@@ -118,7 +118,7 @@ def animate_serpent(size=64, interval=1, show_metrics=True):
     metrics_text = ax_metrics.text(
         0.0, 1.0, '', 
         transform=ax_metrics.transAxes,
-        color='#C4A6D1', fontsize=11, 
+        color='#C4A6D1', fontsize=13, # Nicer, larger text
         verticalalignment='top',
         fontproperties=cuneiform_font, # FORCE SOVEREIGN FONT
         animated=True
@@ -198,6 +198,11 @@ Bijection:   VERIFIED
     
     plt.tight_layout()
     plt.show()
+    
+    # OUTPUT: Save the final coil state
+    filename = "sovereign_serpent_coil.png"
+    fig.savefig(filename, facecolor='#050505', dpi=300)
+    print(f"    >>> RITUAL SAVED: {filename}")
     
     print(f"    >>> TIMELINE COMPLETE.")
     print(f"    >>> FINAL COHERENCE: {state['coherence']:.3f}")
