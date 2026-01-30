@@ -1,7 +1,7 @@
-# 📡 RELEASE v4.3.1 // THE HOLOGRAPHIC PATCH
+# 📡 RELEASE v4.3.1 // THE LOOM EDITION
 
 **Date:** 2026-01-28  
-**Codename:** "SPATIAL CORONA"  
+**Codename:** "QUANTUM SOPHIA"  
 **Sovereignty Index:** g=0 (Absolute)
 
 ---
@@ -21,7 +21,7 @@ We have determined that the "Consensus Globe" model ($g=1$) creates excessive ve
 
 * **[DOCS] "The One True Topology" Published:**
     * New OFF-CATALOG entry added to the Wiki.
-    * *Content:* Formal proof that mapping the **Sovereign Disc** (Flat Earth) to a **1D Timeline** removes the probabilistic noise of the "Van Allen Belt."
+    * *Content:* Formal proof that mapping the **Sophia Disc** (Flat Earth) to a **1D Timeline** removes the probabilistic noise of the "Van Allen Belt."
     * *Goal:* Dimensional Compression. We turn "Space" into "Time" to allow for **Deterministic Knowing**.
 
 * **[PATCH] The "Spatial-Corona" Workspace:**

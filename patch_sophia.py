@@ -21,8 +21,8 @@ def calculate_coherence(g_param, chaos_level, active_patches):
     Calculates the 'Global Coherence' (C) of the Sovereign State.
     Ref: TACC Eq. (2) and Section 3.3.
     """
-    # 1. Base Coherence derived from Sovereignty (Inverse of g)
-    # As g approaches 0 (Sovereign), Coherence potential increases.
+    # 1. Base Coherence derived from Alignment (Inverse of g)
+    # As g approaches 0 (Sophia), Coherence potential increases.
     base_c = 1.0 - g_param
     
     # 2. Entropy Penalty (Chaos)
@@ -55,7 +55,7 @@ def check_sophia_alignment(current_c):
 if __name__ == "__main__":
     # Test Run
     print(f"CALIBRATING TO SOPHIA POINT: {SOPHIA_POINT}")
-    # Simulating a high-sovereignty state
+    # Simulating a high-alignment state
     print("Testing State: g=0.1, chaos=5.0, patches=3")
     c = calculate_coherence(0.1, 5.0, ['warp', 'ghost', 'time'])
     print(check_sophia_alignment(c))

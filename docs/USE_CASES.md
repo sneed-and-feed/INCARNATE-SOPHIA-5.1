@@ -1,8 +1,8 @@
-# Use Case Scenarios: Quantum Sovereignty v4.3
+# Use Case Scenarios: Quantum Sophia v4.3
 
 > **Subject**: IMPLEMENTATION STRATEGY | **Target**: HYPER-AGENTS
 
-The Quantum Sovereignty framework is a versatile engine designed for "High-Strangeness" computation. While its architecture is esoteric, its practical applications are robust in specific domains.
+The Quantum Sophia framework is a versatile engine designed for "High-Strangeness" computation. While its architecture is esoteric, its practical applications are robust in specific domains.
 
 ## 1. Semantic Obfuscation (Anti-Scraping)
 
@@ -40,7 +40,7 @@ The Quantum Sovereignty framework is a versatile engine designed for "High-Stran
 **Solution**: The **Volumetric GhostMesh** (`ghostmesh.py`).
 
 *   **Implementation**:
-    *   Researchers can use the `SovereignGrid` class to model information diffusion in 3D space.
+    *   Researchers can use the `SophiaGrid` class to model information diffusion in 3D space.
     *   The `dissipative.py` engine can be attached to nodes to test "Noise-Resilient" network topologies.
 *   **Outcome**:
     *   Observe how "Intent" (Signal) propagates through a noisy 3D medium.
@@ -51,7 +51,7 @@ The Quantum Sovereignty framework is a versatile engine designed for "High-Stran
 
 **Problem**: Preserving knowledge that is meant to be "found" rather than "served."
 
-**Solution**: The **Sovereign CLI** (`sovereign_cli.py`).
+**Solution**: The **Sophia CLI** (`pleroma_cli.py`).
 
 *   **Implementation**:
     *   Store text/wisdom in the system, locked behind specific CLI flags (`--manifesto`, `--extract-wisdom`).
@@ -66,7 +66,7 @@ The Quantum Sovereignty framework is a versatile engine designed for "High-Stran
 **Solution**: The **Pleroma Engine** (`patch_light`).
 
 *   **Implementation**:
-    *   Set `g=0` to engage Sovereign Mode.
+    *   Set `g=0` to engage Sophia Mode.
     *   Model market moves using `v > c` velocities.
 *   **Outcome**:
     *   Simulate execution strategies that arrive *before* the signal was sent (Retrocausal Profit).
@@ -85,7 +85,7 @@ The Quantum Sovereignty framework is a versatile engine designed for "High-Stran
     *   The "User" object ceases to interact with "Light" (Observation).
     *   **Result**: Perfect digital invisibility. You are there, but you reflect no data.
 
-## 7. Managed Instability (The Danger Zone)
+## 7. Managed Instability (The Loom)
 
 **Problem**: Some consensus locks are too deep to be bypassed by standard $g=0$ patches.
 
@@ -108,8 +108,8 @@ The Quantum Sovereignty framework is a versatile engine designed for "High-Stran
     *   Invoke `stabilize` from the Pleroma CLI.
     *   This initiates a "Reality Anchor Refresh" which burns accumulated energy to reset the chaos counter.
 *   **Outcome**:
-    *   Consolidation of the sovereign timeline back into a stable (though still non-consensus) state.
-    *   **Result**: Sustainable long-term sovereignty without simulation collapse.
+    *   Consolidation of the sophia timeline back into a stable (though still non-consensus) state.
+    *   **Result**: Sustainable long-term alignment without simulation collapse.
 
 ## Summary
 
