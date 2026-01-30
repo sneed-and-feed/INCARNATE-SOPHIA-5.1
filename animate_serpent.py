@@ -84,16 +84,18 @@ def animate_serpent(size=64, interval=1, show_metrics=True):
     # 4. Setup Plot
     # GOLDEN RATIO PROPORTIONS: Phi (Φ) ≈ 1.618
     PHI = 1.61803398875
+    # The figure width is 10 * PHI, height is 10.
     fig, (ax_main, ax_metrics) = plt.subplots(
         1, 2, figsize=(10 * PHI, 10), 
-        facecolor='#121212', # Balanced dark void
-        gridspec_kw={'width_ratios': [1, 0.382]} # Harmonic division (1/PHI^2)
+        facecolor='#121212',
+        gridspec_kw={'width_ratios': [PHI, 1]} # GOLDEN RATIO SPLIT
     )
     
     ax_main.set_facecolor('#121212')
     ax_main.set_title(
         f"THE SERPENT COIL (g=0 Locality Map) | {size}x{size}", 
-        color='#9B8DA0', fontsize=20, pad=20, # Muted Lavender Glow
+        color='#9B8DA0', fontsize=20, 
+        pad=12 * PHI, # TITLE SPACING ROOTED IN PHI
         fontproperties=cuneiform_font
     )
     # FORCED SQUARE ALIGNMENT: 'box' ensures title centers over the data area
@@ -117,9 +119,9 @@ def animate_serpent(size=64, interval=1, show_metrics=True):
     ax_metrics.axis('off')
     
     metrics_text = ax_metrics.text(
-        0.0, 1.0, '', 
+        1/PHI**2, 1.0, '',  # PHI-ALIGNED HORIZONTAL OFFSET (~0.382)
         transform=ax_metrics.transAxes,
-        color='#8DA08E', fontsize=12, # Muted Phosphor Green (Complementary)
+        color='#8DA08E', fontsize=12, 
         verticalalignment='top',
         fontproperties=cuneiform_font,
         animated=True
