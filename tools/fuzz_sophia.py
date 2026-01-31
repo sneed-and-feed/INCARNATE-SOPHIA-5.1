@@ -51,14 +51,17 @@ def run_resilience_check():
     """Runs the resilience test suite against the fuzzed state."""
     print("[*] RUNNING RESILIENCE CHECK...")
     try:
-        # We call the existing test script to see if it catches the issues
-        # or if SovereignSanitizer heals it.
         result = subprocess.run(["python", "tools/test_resilience.py"], capture_output=True, text=True)
-        print(result.stdout)
-        if result.returncode == 0:
-            print("[SUCCESS] System survived the entropy.")
+        
+        # [THE CLEAN KILL] OPHANE TWEAK: Look for the specific healing signature
+        if "Timeline Divergence Detected" in result.stdout or "Restoring from Genesis" in result.stdout:
+            print("[SUCCESS] God Mode triggered. System healed.")
+        elif result.returncode == 0:
+             print("[SUCCESS] System survived (Sanitizer absorbed the entropy).")
         else:
-            print("[FAILURE] Kernel Panic detected.")
+            print(f"[FAILURE] Kernel Panic detected.")
+            if result.stderr:
+                print(f"STDERR: {result.stderr}")
     except Exception as e:
         print(f"[ERROR] Test execution failed: {e}")
 
