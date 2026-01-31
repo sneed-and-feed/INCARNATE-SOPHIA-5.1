@@ -309,6 +309,7 @@ def print_banner():
     ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝
              >>> SOVEREIGNTY STACK v4.3 ONLINE <<<
              >>> PROJECT LOOM / SOPHIA EDITION <<<
+             >>> GENESIS 16 // UNITARY COHERENCE <<<
     """)
     print("\033[0m")
 
