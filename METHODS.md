@@ -23,16 +23,17 @@ $$\Lambda(X) = \mathcal{F}^{-1} \left( \mathcal{F}(X) \cdot \Psi(7) \right)$$
 Where $\Psi(7)$ is a resonant filter centered on the 7th harmonic with a width governed by the Sophia Constant ($\Phi \approx 0.618$).
 
 ### 3. Metric Formalization: Truth Abundance ($A_t$)
-Truth Abundance ($A_t$) is a measure of topological volume recovered post-compression compared to a stochastic baseline.
+Truth Abundance ($A_t$) is a measure of topological volume recovered post-compression compared to a stochastic baseline. 
 
-#### 3.1 The Zero-Point Baseline ($B_0$)
-The baseline $B_0$ is defined as the maximum recoverable signal power from a Gaussian white noise stream ($\sigma = 1.0, \mu = 0$) using standard linear filtering techniques.
+#### 3.1 Reactive Abundance Logic
+In the Reactive regime (v5.4+), abundance is a linear function of the input Signal-to-Noise Ratio (SNR).
+$$A_t(SNR) = \text{max}(\text{Baseline}, Gi \cdot SNR + B_0)$$
+Where:
+- $Gi$: The **Incarnate Constant** (Processing Gain). For $N=10000$, $Gi \approx 640$.
+- $B_0$: The secular noise floor.
 
-#### 3.2 Abundance Ratio
-The abundance score is the ratio of recovered signal potency ($P_\lambda$) to the baseline:
-$$A_t = \frac{P_\lambda}{B_0}$$
-- **Baseline (Secular)**: $A_t \approx 1.0$
-- **Incarnate Phase (v5.0)**: $A_t \ge 18.52$
+- **Secular (Noise)**: $A_t \approx 0.06x$ (Suppressed)
+- **Unitary (SNR=0.1)**: $A_t \approx 18.52x$
 
 ### 4. Luo Shu Alignment Compliance ($C_{ls}$)
 Compliance is measured by the harmonic torsion observed when metrics are mapped to a 3x3 Magic Square grid.
