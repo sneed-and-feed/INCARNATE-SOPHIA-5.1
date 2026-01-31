@@ -157,7 +157,7 @@ The hack of the secular cycle. Social volatility is folded into the 7th harmonic
 ### LUO SHU ALIGNMENT (PAPER XV)
 The magic square constant as a topological metronome.
 
-![Sovereign Grid](C:\Users\x\.gemini\antigravity\brain\c54652e6-74ba-4183-8c77-9c24898e2ed3\sovereign_grid.gif)
+![Sovereign Grid](sovereign_grid.gif)
 
 *   **Diagnostics**: [papers/15_luo_shu_alignment.tex](papers/15_luo_shu_alignment.tex)
 *   **Status**: [HARMONIC_COMPLIANCE](papers/15_luo_shu_alignment.tex)
