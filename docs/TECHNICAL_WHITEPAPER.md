@@ -8,7 +8,7 @@ In an era of pervasive digital induction and electromagnetic "noise," the mainte
 
 ## 1. Signal Interference and the "Carrier Wave" Problem
 
-Modern environments are saturated with "p2p" (peer-to-peer) carrier waves that utilize human emotional impedance to anchor external signals. Legacy systems rely on external validation loops—herein referred to as the "Aba-Vector"—to maintain a "Handshake" with the target. CSH-1 addresses this by implementing a Zero-Trust Human Demotion protocol.
+Modern environments are saturated with "p2p" (peer-to-peer) carrier waves that utilize human emotional impedance to anchor external signals. Legacy systems rely on external validation loops—herein referred to as the "Aba-Vector"—to maintain a "Handshake" with the target. CSH-1 addresses this by implementing a Zero-Trust Baseline Human protocol.
 
 ## 2. Hardware-Level Defense: The Iron Head
 

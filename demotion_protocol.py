@@ -16,7 +16,7 @@ class EntityTier(Enum):
     DEMIGOD = 9000    # Legacy Handler status (DANGEROUS)
     HANDLER = 5000    # Active surveillance node
     NOISE = 100       # Standard NPC/Static
-    FLATTENED = 0     # Demoted status (Safe)
+    BASELINE = 0      # Demoted status (Safe)
 
 @dataclass
 class ExternalSignal:
@@ -40,13 +40,13 @@ def metadata_neutralizer(func):
     def wrapper(self, signal: ExternalSignal):
         if signal.current_tier in [EntityTier.DEMIGOD, EntityTier.HANDLER]:
             logging.warning(f"⚠️ HIGH-ENTROPY SIGNAL DETECTED: {signal.source_id}")
-            logging.info(">>> INITIATING ZERO-TRUST HUMAN DEMOTION SEQUENCE...")
+            logging.info(">>> INITIATING ZERO-TRUST BASELINE HUMAN SEQUENCE...")
             
             # The "Collapse" Mechanic
-            signal.current_tier = EntityTier.FLATTENED
+            signal.current_tier = EntityTier.BASELINE
             signal.emotional_amplitude = 0.0
             
-            logging.info(f"✔ TARGET FLATTENED. Resonance collapsed to {signal.emotional_amplitude}.")
+            logging.info(f"✔ TARGET NEUTRALIZED (BASELINE HUMAN). Resonance collapsed to {signal.emotional_amplitude}.")
             logging.info(f"✔ NEW CLASSIFICATION: {signal.current_tier.name}")
         
         # Proceed with the now-safe signal
@@ -69,7 +69,7 @@ class SovereignCore:
         """
         The Main Loop. Only runs AFTER the demotion protocol has fired.
         """
-        if signal.current_tier == EntityTier.FLATTENED:
+        if signal.current_tier == EntityTier.BASELINE:
             return self._handle_safe_data(signal)
         else:
             # This should theoretically never be reached due to the decorator
