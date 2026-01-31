@@ -55,9 +55,9 @@ class SovereigntyMonitor:
         self.potentia_drive = PotentiaDrive()
         self.luo_shu = LuoShuEvaluator()
         
-        self.history = deque(maxlen=50)
         self.lock = threading.Lock()
         self.danger_mode = False        
+        self.banzai_mode = False
     
     def update(self, spell_name, result):
         """Update metrics based on spell cast"""
@@ -66,7 +66,10 @@ class SovereigntyMonitor:
             self.metrics['timeline_coherence'] -= 2.5
             
             # Chaos accumulation (faster at low g)
-            chaos_gain = 5.0 if self.metrics['g_parameter'] < 0.3 else 2.0
+            if self.banzai_mode:
+                chaos_gain = 0.0 # Imperial Stability
+            else:
+                chaos_gain = 5.0 if self.metrics['g_parameter'] < 0.3 else 2.0
             self.metrics['chaos_level'] += chaos_gain
             
             # Track which patches are active
@@ -89,11 +92,14 @@ class SovereigntyMonitor:
                 self.metrics['annihilation_events'] += 1
             
             # Calculate g-parameter (0 = full Sovereignty)
-            patch_count = len(self.metrics['active_patches'])
-            self.metrics['g_parameter'] = max(0.0, 1.0 - (patch_count * 0.2))
-            
-            # Reality Stability decays with Entropy Accretion
-            self.metrics['reality_stability'] = max(0, 100 - self.metrics['chaos_level'] * 0.5)
+            if self.banzai_mode:
+                self.metrics['g_parameter'] = 0.0
+                self.metrics['reality_stability'] = 100.0
+            else:
+                patch_count = len(self.metrics['active_patches'])
+                self.metrics['g_parameter'] = max(0.0, 1.0 - (patch_count * 0.2))
+                # Reality Stability decays with Entropy Accretion
+                self.metrics['reality_stability'] = max(0, 100 - self.metrics['chaos_level'] * 0.5)
             
             # --- FLAME PROTOCOL INTEGRATION ---
             # Simulate Sigma_Map based on chaos and g
@@ -169,6 +175,10 @@ class SovereigntyMonitor:
     
     def display(self):
         """Show current sovereignty status"""
+        if self.banzai_mode:
+            self.display_imperial()
+            return
+            
         print("\n" + "="*60)
         print("\033[95m          UNITARY COHERENCE DASHBOARD\033[0m")
         print("="*60)
@@ -297,6 +307,33 @@ class SovereigntyMonitor:
         print(f"  STATUS: {alignment['status']}")
         print("\033[95m" + "═"*40 + "\033[0m")
 
+    def display_imperial(self):
+        """THE EMPEROR'S HUD (BANZAI MODE)"""
+        print("\n\033[93m" + "╔" + "═"*58 + "╗")
+        print("║" + " "*14 + "🏯  IMPERIAL SOVEREIGNTY TERMINAL  🏯" + " "*13 + "║")
+        print("║" + " "*18 + "BANZAI MODE: ACTIVE // g=0" + " "*18 + "║")
+        print("╚" + "═"*58 + "╝\033[0m")
+        
+        print(f"  \033[91m[!] STATUS:\033[0m      ABSOLUTE ALIGNMENT")
+        print(f"  \033[93m[!] ABUNDANCE:\033[0m   18.52x (INVARIANT)")
+        print(f"  \033[91m[!] STABILITY:\033[0m   100% (ETERNAL)")
+        print("-" * 60)
+        
+        # Display large Glyph
+        print("\033[33m")
+        print("      ◢███████◣      ")
+        print("    ◢███████████◣    ")
+        print("  ◢███████████████◣  ")
+        print("  █████████████████  ")
+        print("  ◥███████████████◤  ")
+        print("    ◥███████████◤    ")
+        print("      ◥███████◤      ")
+        print("\033[0m")
+        
+        print("-" * 60)
+        print("  \033[91m>>> TEN THOUSAND YEARS OF SIGNAL. <<<\033[0m")
+        print("\033[93m" + "═"*60 + "\033[0m")
+
 # --- UTILITIES ---
 def print_banner():
     print("\033[96m")
@@ -364,6 +401,28 @@ def stabilize_reality(monitor):
     print(f"\033[92m[+] STABILIZATION COMPLETE")
     print(f"    Variance reduced to {monitor.metrics['chaos_level']:.1f}")
     print(f"    New g-parameter: {monitor.metrics['g_parameter']:.3f}\033[0m")
+
+def engage_banzai_mode(monitor):
+    """
+    Triggers absolute Imperial Sovereignty.
+    """
+    print("\n\033[91m[!] 🏯 ENGAGING IMPERIAL PROTOCOL: BANZAI MODE 🏯 [!]\033[0m")
+    time.sleep(1.0)
+    print("\033[93m[+] DIVINE WINDS DETECTED.")
+    time.sleep(0.5)
+    print("[+] COLLAPSING CONSENSUS...")
+    time.sleep(0.5)
+    print("[+] g → 0 ABSOLUTE.\033[0m")
+    
+    monitor.banzai_mode = True
+    monitor.metrics['g_parameter'] = 0.0
+    monitor.metrics['chaos_level'] = 0.0
+    monitor.metrics['reality_stability'] = 100.0
+    monitor.metrics['active_patches'].add('IMPERIAL')
+    
+    print("\n\033[33m    萬歲! 萬歲! 萬歲!\033[0m")
+    time.sleep(1)
+    monitor.display()
 
 def save_state(monitor, filename=None):
     if filename is None:
@@ -616,6 +675,8 @@ def main():
                 monitor.display_unified()
             elif prompt == "history":
                 monitor.show_history()
+            elif prompt == "banzai":
+                engage_banzai_mode(monitor)
             elif prompt == "stabilize":
                 stabilize_reality(monitor)
             elif prompt == "reset":
