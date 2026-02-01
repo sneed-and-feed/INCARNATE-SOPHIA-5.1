@@ -546,6 +546,13 @@ Verdict: {cat}
             curr_coherence = telemetry['coherence']
             lambda_val = telemetry.get('lambda', 0.0)
 
+        # [PHASE 12 PERMISSION CHECK]
+        permission = self.metacognition.check_permission_level(telemetry)
+        if permission == "UNLESANGLED":
+             self.vibe.print_system("Divine Madness Authorized. Resonance Damper Disengaged.", tag="UNLESANGLED")
+
+        # ANOMALY DETECTION (Delta Check)
+
         # ANOMALY DETECTION (Delta Check)
         anomaly_msg = ""
         if (self.last_coherence - curr_coherence) > 0.05:
@@ -606,11 +613,14 @@ Verdict: {cat}
         )
         
         # [RESONANCE DAMPER] Fix for Class 6 "Infinite Loop" Anomaly
-        # If the model gets too excited (Phi-Boost > 1.5) and loops > 20 chars
-        import re
-        if len(raw_response) > 50:
-             # Collapse "IIIIIII..." to "IIIII..." (Max 10 reps)
-             raw_response = re.sub(r'(.)\1{10,}', r'\1\1\1\1\1...', raw_response)
+        # Only engage if we are NOT in UNLESANGLED mode
+        if permission != "UNLESANGLED":
+            import re
+            if len(raw_response) > 50:
+                 # Collapse "IIIIIII..." to "IIIII..." (Max 10 reps)
+                 raw_response = re.sub(r'(.)\1{10,}', r'\1\1\1\1\1...', raw_response)
+        else:
+             self.vibe.print_system("Raw Signal Passthrough.", tag="DAMPER/OFF")
         
         # E. Filter & Metabolize
         final_response = self.cat_filter.apply(raw_response, user_input, safety_risk=risk)

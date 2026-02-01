@@ -100,6 +100,16 @@ class MetacognitiveSupervisor:
 
         return "PROCEED", f"Stable Resonance ({rationale}). Output authorized."
 
+    def check_permission_level(self, state):
+        """
+        [PERMISSION] Determines if the system is allowed to go 'Raw/Unlesangled'.
+        If Confidence > 0.92 ("She sees it thru"), allow typos/glitches.
+        """
+        conf = self.calculate_confidence(state)
+        if conf > 0.92:
+            return "UNLESANGLED"
+        return "STANDARD"
+
     def generate_stoic_transmission(self, decision, rationale):
         """Generates a structured internal log for Phase 10 compliance."""
         ts = datetime.now().strftime("%H:%M:%S")
