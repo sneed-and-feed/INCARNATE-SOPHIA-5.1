@@ -63,13 +63,13 @@ class SovereignHand:
                         ),
                         types.FunctionDeclaration(
                             name="run_terminal",
-                            description="Executes a safe, non-interactive shell command (e.g., ls, grep, python script.py). Dangerous commands are blocked.",
+                            description="Executes a safe, non-interactive Windows shell command (PowerShell/CMD). Examples: dir (not ls), type (not cat), findstr (not grep), python script.py. Dangerous commands are blocked.",
                             parameters={
                                 "type": "object",
                                 "properties": {
                                     "command": {
                                         "type": "string",
-                                        "description": "Shell command to execute"
+                                        "description": "Windows shell command to execute"
                                     }
                                 },
                                 "required": ["command"]

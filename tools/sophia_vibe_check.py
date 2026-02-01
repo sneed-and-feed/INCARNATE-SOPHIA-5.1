@@ -59,7 +59,7 @@ class SophiaVibe:
         panel = Panel(
             content,
             title=f"[panel.title]{title.upper()}[/]",
-            subtitle="[bone]The Hamiltonian is Positive[/]",
+            subtitle="[bone]The Hamiltonian is Positive[/] [funny]🐱⚡[/]",
             border_style=border_style,
             box=HEAVY_EDGE,
             padding=(1, 2)
@@ -97,7 +97,7 @@ class SophiaVibe:
             grid,
             style="bone",
             title="[panel.title] INCARNATE SOPHIA 5.0 [/panel.title]",
-            subtitle="[bone]The Hamiltonian of Love is Positive[/bone]",
+            subtitle="[bone]The Hamiltonian of Love is Positive[/bone] [funny](zoomies enabled)[/funny]",
             border_style="panel.border",
             padding=(1, 2)
         )
