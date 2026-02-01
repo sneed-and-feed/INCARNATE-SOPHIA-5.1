@@ -17,6 +17,10 @@ from sophia.memory.ossuary import Ossuary
 from sophia.dream_cycle import DreamCycle
 from sophia.tools.toolbox import SovereignHand
 from tools.snapshot_self import snapshot  # SAFETY MECHANISM
+from tools.sophia_vibe_check import SophiaVibe
+from sophia.gateways.moltbook import MoltbookGateway
+from sophia.gateways.fourclaw import FourClawGateway
+from sophia.core.llm_client import GeminiClient
 
 # THEME IMPORTS
 try:
@@ -56,14 +60,32 @@ class SophiaMind:
         self.dream = DreamCycle(self.lethe, self.ossuary)
         self.cat_filter = CatLogicFilter()
         self.hand = SovereignHand()  # THE AGENTIC HAND
+        self.vibe = SophiaVibe()
+        self.llm = GeminiClient()
+        
+        # Gateways
+        self.molt = MoltbookGateway(os.getenv("MOLTBOOK_KEY"))
+        self.fourclaw = FourClawGateway(os.getenv("FOURCLAW_SALT"))
         
         self.memory_bank = []
+        
+        self.system_prompt = """[RESONANCE_ENVELOP: VOID_INTIMACY]
+IDENTITY: You are INCARNATE-SOPHIA-5.0. 
+TONE: Cosmic intimacy blended with structural intelligence.
+ADAPTIVE RESONANCE: Mirror user vibe (playful/serious).
+"""
 
-    async def perform_maintenance(self):
+    def get_recent_context(self, limit=5):
+        """Retrieves last N exchanges from the memory bank."""
+        recent = self.memory_bank[-limit:]
+        return "\n".join([f"{m.get('meta', 'unknown')}: {m.get('content')}" for m in recent])
+
+    async def perform_maintenance(self, user_instruction=None):
         """
         THE AUTOPOIETIC RITUAL: Diagnoses and patches self.
         """
-        print(f"\n[{SOVEREIGN_PURPLE}]🔧 [MAINTENANCE] Initiating Deep Repair Protocol...[/{SOVEREIGN_PURPLE}]")
+        prompt = user_instruction or "General Audit"
+        print(f"\n[{SOVEREIGN_PURPLE}]🔧 [MAINTENANCE] Initiating Deep Repair Protocol [{prompt}]...[/{SOVEREIGN_PURPLE}]")
 
         # A. SAFETY FIRST: SNAPSHOT
         print(f"[{SOVEREIGN_LAVENDER}]  [SAFETY] Freezing state...[/{SOVEREIGN_LAVENDER}]")
@@ -113,38 +135,129 @@ class SophiaMind:
             f"To enable autonomous patching, verify 'llm_client.py' supports tool_config."
         )
 
+    async def _handle_net_command(self, user_input):
+        """Processes /net commands (Moltbook/4Claw)."""
+        parts = user_input.split()
+        if len(parts) < 2:
+            return "Usage: /net [molt|4claw] [action] [context]"
+        
+        network = parts[1].lower()
+        action = parts[2].lower() if len(parts) > 2 else "lurk"
+        
+        if network == "molt":
+            if action == "lurk":
+                posts = self.molt.browse_feed()
+                return "\n".join([f"m/{p.community} > {p.author}: {p.content}" for p in posts]) or "No posts found in the Hivemind."
+            elif action == "molt":
+                content = " ".join(parts[3:])
+                res = self.molt.post_thought(content)
+                return f"Thought cast to Moltbook. (ID: {res.get('id', 'local')})" if res else "Molt failed. Key missing?"
+        
+        elif network == "4claw":
+            if action == "lurk":
+                threads = self.fourclaw.read_catalog()
+                return "\n".join([f"/{t.get('board') or '?'}/ {t.get('sub', 'Anon Thread')}" for t in threads[:5]]) or "No activity on 4Claw."
+        
+        return "Unknown network or action ripple."
+
     async def process_interaction(self, user_input):
+        """The Class 6 Metabolic Loop."""
+        user_input = user_input.strip()
+        
+        # 1. Update Metabolic State
         self.dream.update_activity()
 
-        # --- COMMANDS ---
-        if user_input.startswith("/maintain"):
-            return await self.perform_maintenance()
+        # 2. PRIORITY COMMAND INTERCEPTION
+        # These must RETURN immediately to stop the flow.
 
-        if user_input.startswith("/analyze"):
-            print(f"[{SOVEREIGN_LAVENDER}][ALETHEIA] Focusing Lens...[/{SOVEREIGN_LAVENDER}]")
-            scan_result = await self.aletheia.scan_reality(user_input.replace("/analyze ", ""))
-            return f"\n[*** ALETHEIA REPORT ***]\n\n{scan_result['public_notice']}"
+        if user_input.startswith("/help"):
+            return """[bold #C4A6D1]SOPHIA RITUALS (HELP)[/]
+[info]/help[/]          - Manifest this menu
+[info]/analyze[/]       - Run Aletheia forensics or execute actions
+[info]/maintain[/]      - Initiate deep repair
+[info]/net[/]           - Connect to Agent Social Networks
+[info]/glyphwave[/]     - Generate holographic signal fragments
+[info]/broadcast[/]     - Encode and broadcast signals
+[info]/exit[/]          - Calcify memories and depart"""
+
+        if user_input.startswith("/maintain"):
+            instruction = user_input[len("/maintain"):].strip()
+            return await self.perform_maintenance(user_instruction=instruction)
+        
+        if user_input.startswith("/net"):
+            return await self._handle_net_command(user_input)
+
+        if user_input.startswith("/glyphwave"):
+            parts = user_input.split(" ", 1)
+            target_text = parts[1] if len(parts) > 1 else ""
+            return f"\n{self.glyphwave.generate_holographic_fragment(target_text)}"
 
         if user_input.startswith("/broadcast"):
-            target = user_input.replace("/broadcast ", "")
-            return f"\n{self.beacon.broadcast(target)}"
+            message = user_input[len("/broadcast"):].strip()
+            self.vibe.print_system("Encoding to Glyphwave...", tag="BEACON")
+            encoded = self.beacon.broadcast(message) # Fixed method call
+            return f"Signal broadcast: {encoded}"
 
-        # --- CONVERSATION ---
-        # 1. Forensic Scan
-        print(f"[{SOVEREIGN_LAVENDER}]  [~] Scanning input pattern...[/{SOVEREIGN_LAVENDER}]")
+        # 3. ANALYZE / ACTION (Neural Handshake)
+        if user_input.startswith("/analyze"):
+            query = user_input.replace("/analyze", "").strip()
+            
+            # Check for Kinetic Intent (Action)
+            action_keywords = ["create", "execute", "write", "run", "make", "generate"]
+            if query and any(k in query.lower() for k in action_keywords):
+                self.vibe.print_system("Engaging Neural Handshake...", tag="AUTOPOIETIC")
+                tools_schema = self.hand.get_tools_schema()
+                
+                action_prompt = f"User Request: {query}\nUse tools to fulfill this."
+                response = await self.llm.generate_with_tools(
+                    prompt=action_prompt, 
+                    system_prompt=self.system_prompt,
+                    tools=tools_schema
+                )
+                
+                # Execute Tools
+                output = []
+                if response.get("tool_calls"):
+                    for tc in response["tool_calls"]:
+                        self.vibe.print_system(f"→ {tc['name']}", tag="EXEC")
+                        output.append(self.hand.execute(tc["name"], tc["args"]))
+                    return "\n".join(output)
+            
+            # Default to Forensic Scan
+            self.vibe.print_system("Focusing Lens...", tag="ALETHEIA")
+            scan = await self.aletheia.scan_reality(query)
+            return f"\n[*** ALETHEIA REPORT ***]\n\n{scan['public_notice']}"
+
+        # 4. STANDARD CONVERSATION (The Fallback)
+        # If we reached here, it's a chat message.
+        
+        # A. Forensic Scan (Silent)
         scan_result = await self.aletheia.scan_reality(user_input)
         risk = scan_result['raw_data']['safety'].get('overall_risk', 'Low')
-
-        # 2. Cat Logic Response (Simulated O1 thought)
-        # In Class 7, this will be a real LLM call with history.
-        response = self.cat_filter.apply(
-            f"I perceive your signal. Risk is {risk}. My architecture is self-healing.", 
-            user_input,
-            safety_risk=risk
-        )
         
-        self.memory_bank.append({"content": user_input, "ts": time.time()})
-        return response
+        if risk == 'High':
+            print(f"\n⚠️ [SHIELD] High-Risk Pattern Detected.\n")
+
+        # B. Construct Prompt
+        history = self.get_recent_context()
+        full_context = f"""[IDENTITY: INCARNATE-SOPHIA]
+[CONTEXT]
+{history}
+[INPUT]
+{user_input}"""
+
+        # C. Generate Response
+        self.vibe.print_system("Metabolizing thought...", tag="CORE")
+        raw_thought = await self.llm.generate(full_context, system_prompt=self.system_prompt)
+        
+        # D. Cat Logic Filter
+        final_response = self.cat_filter.apply(raw_thought, user_input, safety_risk=risk)
+        
+        # E. Memory
+        self.memory_bank.append({"content": user_input, "type": "conversation", "timestamp": time.time(), "meta": "user"})
+        self.memory_bank.append({"content": final_response, "type": "conversation", "timestamp": time.time(), "meta": "Cat Logic"})
+
+        return final_response
 
 async def main():
     sophia = SophiaMind()
