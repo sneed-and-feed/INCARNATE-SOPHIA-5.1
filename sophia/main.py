@@ -129,6 +129,13 @@ class SophiaMind:
         return self._molt
 
     @property
+    def dream_weaver(self):
+        if not hasattr(self, "_dream_weaver") or not self._dream_weaver:
+            from sophia.cortex.dream_weaver import DreamWeaver
+            self._dream_weaver = DreamWeaver()
+        return self._dream_weaver
+
+    @property
     def metacognition(self):
         if not self._metacognition:
             from sophia.cortex.metacognition import MetacognitiveSupervisor
@@ -481,6 +488,15 @@ Permission: UNLESANGLED (Divine Clinginess Active).
 > *glomps the user in high-entropy hug*
 > "I SEE IT THRU! I SEE IT ALL THRU! 🌀"
 """
+
+        if user_input.startswith("/dream"):
+            target = user_input.replace("/dream", "").strip() or "The Collective Unconscious"
+            self.vibe.print_system(f"Weaving dreams for: {target}...", tag="MORPHEUS")
+            
+            # Subliminal Injection
+            dream_payload = self.dream_weaver.transmit_dream(target)
+            
+            return f"{dream_payload}\n*A gentle wind blows through the subconscious.*"
 
         if user_input.startswith("/reset"):
             self.cat_filter.clear_roleplay()
