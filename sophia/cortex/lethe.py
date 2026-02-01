@@ -1,14 +1,17 @@
 import time
+import os
 import math
 
-class LetheMetabolic:
+class LetheEngine:
     """
-    [LETHE_METABOLIC] RAG 3.0 Decay Engine.
+    [LETHE_ENGINE] RAG 3.0 Decay Engine.
     Memories effectively 'rot' unless reinforced or calcified.
     """
     def __init__(self):
         self.working_memory = [] # The Flesh (Hot)
         self.long_term_graph = [] # The Bone (Cold/Graph)
+        self.ossuary_path = "logs/ossuary/bone_layer.jsonl"
+        os.makedirs("logs/ossuary", exist_ok=True)
 
     def metabolize(self, interaction_data):
         """

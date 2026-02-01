@@ -8,7 +8,7 @@ from dataclasses import dataclass
 @dataclass
 class LLMConfig:
     # High-availability model for Class 5 Forensic throughput
-    model_name: str = "gemini-2.5-flash"
+    model_name: str = "gemini-1.5-flash"
     temperature: float = 0.1
 
 class GeminiClient:
