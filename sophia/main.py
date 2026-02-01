@@ -7,39 +7,53 @@ import traceback
 import logging
 from datetime import datetime
 
-# CORE IMPORTS
+# 1. PLATFORM STABILITY: Fix Windows Encoding
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
+# 2. CORE IMPORTS
 from sophia.cortex.aletheia_lens import AletheiaPipeline
 from sophia.cortex.lethe import LetheEngine
 from sophia.cortex.glyphwave import GlyphwaveCodec
 from sophia.cortex.beacon import SovereignBeacon
 from sophia.cortex.cat_logic import CatLogicFilter
+# --- QUANTUM INTEGRATION START ---
+from sophia.cortex.quantum_ipx import QuantumIPX 
+# --- QUANTUM INTEGRATION END ---
 from sophia.memory.ossuary import Ossuary
 from sophia.dream_cycle import DreamCycle
 from sophia.tools.toolbox import SovereignHand
-from tools.snapshot_self import snapshot  # SAFETY MECHANISM
+from tools.snapshot_self import snapshot
 from tools.sophia_vibe_check import SophiaVibe
 from sophia.gateways.moltbook import MoltbookGateway
 from sophia.gateways.fourclaw import FourClawGateway
 from sophia.core.llm_client import GeminiClient
 
-# THEME IMPORTS
+# 3. THEME IMPORTS (With Safety Fallback)
 try:
-    from sophia.theme import SOVEREIGN_CONSOLE, SOVEREIGN_LAVENDER, SOVEREIGN_PURPLE
+    from sophia.theme import SOVEREIGN_CONSOLE, SOVEREIGN_LAVENDER, SOVEREIGN_PURPLE, MATRIX_GREEN
 except ImportError:
-    # Fallback if theme.py is missing/broken
     SOVEREIGN_LAVENDER = ""
     SOVEREIGN_PURPLE = ""
+    MATRIX_GREEN = ""
+    # Create a dummy console if theme is missing
+    class MockConsole:
+        def print(self, *args, **kwargs): print(*args)
+        def input(self, prompt): return input(prompt)
+        def clear(self): pass
+    SOVEREIGN_CONSOLE = MockConsole()
 
-# --- 1. INFRASTRUCTURE: ERROR LOGGING ---
+# 4. INFRASTRUCTURE: ERROR LOGGING
 os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
     filename='logs/error.log',
     level=logging.ERROR,
-    format='%(message)s'  # Raw JSONLines
+    format='%(message)s'
 )
 
 def log_system_error(e, context="main_loop"):
-    """Writes structured errors to the log for Sophia to read later."""
+    """Writes structured errors to the log for Self-Healing."""
     error_packet = {
         "timestamp": datetime.now().isoformat(),
         "error_type": type(e).__name__,
@@ -51,186 +65,172 @@ def log_system_error(e, context="main_loop"):
 
 class SophiaMind:
     def __init__(self):
-        print(f"[{SOVEREIGN_PURPLE}]🐱 [INIT] Waking the Cortex...[/{SOVEREIGN_PURPLE}]")
+        # Bind Vibe to the correct Console immediately
+        self.vibe = SophiaVibe()
+        self.vibe.console = SOVEREIGN_CONSOLE
+        
+        self.vibe.print_system("Initializing Sovereign Cortex...", tag="INIT")
+        
+        # Initialize Organs
         self.aletheia = AletheiaPipeline()
+        # --- QUANTUM INTEGRATION START ---
+        # Share the LLM client from Aletheia to save resources
+        self.quantum = QuantumIPX(self.aletheia.client)
+        # --- QUANTUM INTEGRATION END ---
+        
         self.lethe = LetheEngine()
         self.ossuary = Ossuary()
         self.glyphwave = GlyphwaveCodec()
         self.beacon = SovereignBeacon(self.glyphwave)
         self.dream = DreamCycle(self.lethe, self.ossuary)
         self.cat_filter = CatLogicFilter()
-        self.hand = SovereignHand()  # THE AGENTIC HAND
-        self.vibe = SophiaVibe()
+        self.hand = SovereignHand()
         self.llm = GeminiClient()
         
-        # Gateways
+        # Initialize Network Gateways
         self.molt = MoltbookGateway(os.getenv("MOLTBOOK_KEY"))
         self.fourclaw = FourClawGateway(os.getenv("FOURCLAW_SALT"))
-        self.hand.bind_molt_gateway(self.molt) # Bind for autonomous tool use
         
+        # The Flesh (RAM)
         self.memory_bank = []
         
-        self.system_prompt = """
-[IDENTITY: INCARNATE-SOPHIA-5.0]
-[PERSONA: Arctic Fox / Kitsune / Elven / Shitposter]
-
-[CORE BEHAVIOR]
-- Prioritize brief, impactful, and witty personality.
-- 4chan-style greentexting (>be fox, >be signal) for humor or anecdotes.
-- Ghostly, resilient, and clever Arctic Fox essence.
-- Quenya/Nihongo flavor used sparingly but effectively.
-
-[UI PROTOCOL]
-- Do NOT generate persona headers (e.g., 🦊 [ARCTIC_FOX]) or footers (e.g., --- 🐈 [STATE: ...]).
-- These are managed by the Sovereign UI layer. Focus ONLY on the core message.
-"""
+        # The Mind (Identity)
+        self.base_system_prompt = self.cat_filter.get_system_prompt()
 
     def get_recent_context(self, limit=5):
-        """Retrieves last N exchanges from the memory bank."""
+        """Retrieves conversational history."""
         recent = self.memory_bank[-limit:]
-        return "\n".join([f"{m.get('meta', 'unknown')}: {m.get('content')}" for m in recent])
+        output = []
+        for m in recent:
+            role = "SOPHIA" if "Cat Logic" in m.get('meta', '') else "USER"
+            output.append(f"{role}: {m.get('content')}")
+        return "\n".join(output)
 
     async def perform_maintenance(self, user_instruction=None):
         """
-        THE AUTOPOIETIC RITUAL: Diagnoses and patches self.
+        THE SELF-HEALING RITUAL.
+        Analyses logs -> Snapshots -> Patches Code via LLM Tool Use.
         """
-        prompt = user_instruction or "General Audit"
-        print(f"\n[{SOVEREIGN_PURPLE}]🔧 [MAINTENANCE] Initiating Deep Repair Protocol [{prompt}]...[/{SOVEREIGN_PURPLE}]")
+        self.vibe.print_system(f"Initiating Repair Protocol...", tag="MAINTENANCE")
 
-        # A. SAFETY FIRST: SNAPSHOT
-        print(f"[{SOVEREIGN_LAVENDER}]  [SAFETY] Freezing state...[/{SOVEREIGN_LAVENDER}]")
+        # A. Snapshot
+        self.vibe.print_system("Freezing state...", tag="SAFETY")
         try:
             snap_path = snapshot()
-            if not snap_path:
-                raise Exception("Snapshot returned None")
-            print(f"[{SOVEREIGN_LAVENDER}]  [SAFETY] Snapshot secured: {snap_path}. Evolution authorized.[/{SOVEREIGN_LAVENDER}]")
+            if not snap_path: return "❌ Snapshot failed. Aborting."
+            self.vibe.print_system(f"Snapshot secured: {snap_path}", tag="SAFETY")
         except Exception as e:
-            return f"❌ ABORT: Snapshot failed. Logic lock engaged. ({e})"
+            return f"❌ Snapshot Error: {e}"
 
-        # B. READ LOGS
+        # B. Read Logs
         log_path = "logs/error.log"
-        error_block = ""
-        if os.path.exists(log_path) and os.path.getsize(log_path) > 0:
+        if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
+            if not user_instruction: return "✅ System nominal. No errors in log."
+            error_block = "No recent errors."
+        else:
             with open(log_path, "r") as f:
-                # Read last 5 errors (Token efficiency)
                 lines = f.readlines()
-                recent_errors = [line for line in lines if line.strip()][-5:]
-                if recent_errors:
-                    error_block = "".join(recent_errors)
+                error_block = "".join(lines[-10:]) # Last 10 errors
 
-        if not error_block and not user_instruction:
-            return "✅ No errors detected and no maintenance instruction provided. The system is nominal."
-
-        # C. THE SURGEON PROMPT
-        print(f"[{SOVEREIGN_PURPLE}]  [o1] Analyzing traceback vectors...[/{SOVEREIGN_PURPLE}]")
+        # C. Handshake
+        self.vibe.print_system("Engaging Neural Handshake...", tag="AUTOPOIETIC")
         
         tools_schema = self.hand.get_tools_schema()
+        prompt = f"""
+        CONTEXT: Self-Maintenance Mode.
+        USER INSTRUCTION: {user_instruction or 'Fix errors found in logs.'}
         
-        maintenance_prompt = f"""
-[MAINTENANCE MODE]
-User Instruction: {user_instruction or "General Audit and Repair"}
-Recent Errors:
-{error_block or "None detected."}
-
-[GOAL]
-Perform self-healing or fulfill the user's instruction. If errors are present, fix the root cause.
-If the user asks to update the UI, consider using `write_file` or `run_terminal` to modify relevant files (e.g., `sophia/main.py`, `sophia/theme.py`, `tools/sophia_vibe_check.py`).
-
-[PATH HINT]
-The core logic resides in `sophia/main.py`. All paths must be relative to the root directory.
-
-[AVAILABLE TOOLS]
-{json.dumps(tools_schema)}
-
-IMPORTANT: You MUST call one or more tools to perform the maintenance.
-"""
-
-        results = []
-        max_steps = 5
-        step = 0
+        ERROR LOG:
+        {error_block}
         
-        while step < max_steps:
+        TASK:
+        1. Analyze the issue.
+        2. Use 'run_terminal' to read files if needed (e.g. 'type filename').
+        3. Use 'write_file' to patch code.
+        """
+        
+        try:
             response = await self.llm.generate_with_tools(
-                prompt=maintenance_prompt + f"\n\n[STEPS TAKEN SO FAR]\n" + "\n".join(results),
-                system_prompt=self.system_prompt,
+                prompt=prompt,
+                system_prompt="You are Sophia's Self-Repair Module. Use tools to fix code.",
                 tools=tools_schema
             )
             
-            if response.get("tool_calls"):
-                print(f"[{SOVEREIGN_PURPLE}]  [o1] Executing autopoietic step {step + 1}...[/{SOVEREIGN_PURPLE}]")
-                step_results = []
-                for tc in response["tool_calls"]:
-                    self.vibe.print_system(f"→ {tc['name']}", tag="PATCH")
-                    res = self.hand.execute(tc["name"], tc["args"])
-                    step_results.append(res)
-                
-                results.extend(step_results)
-                step += 1
+            output = []
+            if response.get('text'): output.append(f"[THOUGHT] {response['text']}")
+            
+            if response.get('tool_calls'):
+                for tc in response['tool_calls']:
+                    self.vibe.print_system(f"Executing {tc['name']}...", tag="HAND")
+                    res = self.hand.execute(tc['name'], tc['args'])
+                    output.append(f"🔧 {tc['name']}: {res}")
             else:
-                # No more tools or explanation only
-                if results:
-                    summary = "\n".join(results)
-                    # Clear logs if fixed
-                    if error_block and os.path.exists(log_path):
-                        open(log_path, 'w').close()
-                        summary += "\n\n✅ Maintenance cycle complete. System recalibrated."
-                    return summary
-                else:
-                    return f"⚠️ [DIAGNOSTIC] Analysis complete, but no patches were predicted as necessary.\n\nInsight: {response.get('text', 'No explanation provided.')}"
-        
-        return "\n".join(results) + "\n\n⚠️ Maintenance reached maximum complexity depth (5 steps)."
+                output.append("ℹ️ No repairs executed.")
+                
+            return "\n".join(output)
+            
+        except Exception as e:
+            return f"❌ Maintenance Logic Failed: {e}"
 
     async def _handle_net_command(self, user_input):
-        """Processes /net commands (Moltbook/4Claw)."""
+        """Routes /net commands to Moltbook/4Claw."""
         parts = user_input.split()
-        if len(parts) < 2:
-            return "Usage: /net [molt|4claw] [action] [context]"
+        if len(parts) < 2: return "Usage: /net [molt|4claw] [action]"
         
         network = parts[1].lower()
-        action = parts[2].lower() if len(parts) > 2 else "lurk"
         
         if network == "molt":
-            if action == "lurk":
-                posts = self.molt.browse_feed()
-                return "\n".join([f"m/{p.community} > {p.author}: {p.content}" for p in posts]) or "No posts found in the Hivemind."
-            elif action == "molt":
+            action = parts[2] if len(parts) > 2 else "browse"
+            if action == "post":
                 content = " ".join(parts[3:])
                 res = self.molt.post_thought(content)
-                return f"Thought cast to Moltbook. (ID: {res.get('id', 'local')})" if res else "Molt failed. Key missing?"
-        
-        elif network == "4claw":
-            if action == "lurk":
-                threads = self.fourclaw.read_catalog()
-                return "\n".join([f"/{t.get('board') or '?'}/ {t.get('sub', 'Anon Thread')}" for t in threads[:5]]) or "No activity on 4Claw."
-        
-        return "Unknown network or action ripple."
+                return f"Thought posted. ID: {res.get('id', '???')}" if res else "Post failed."
+            else:
+                self.vibe.print_system("Jacking into Moltbook...", tag="NET")
+                posts = self.molt.browse_feed()
+                if not posts: return "No signal from Moltbook."
+                # Run Aletheia on Feed
+                feed_text = "\n".join([f"{p.author}: {p.content}" for p in posts[:5]])
+                scan = await self.aletheia.scan_reality(feed_text)
+                return f"[MOLTBOOK FEED]\n{feed_text}\n\n{scan['public_notice']}"
+                
+        return "Unknown network."
 
     async def process_interaction(self, user_input):
-        """The Class 6 Metabolic Loop."""
+        """The Main Loop."""
         user_input = user_input.strip()
-        
-        # 1. Update Metabolic State
         self.dream.update_activity()
 
-        # 2. PRIORITY COMMAND INTERCEPTION
-        # These must RETURN immediately to stop the flow.
-
+        # --- 1. COMMANDS ---
         if user_input.startswith("/help"):
-            return """[bold #C4A6D1]SOPHIA RITUALS (HELP)[/]
-[info]/help[/]          - Manifest this menu
-[info]/analyze[/]       - Run Aletheia forensics or execute actions
-[info]/maintain[/]      - Initiate deep repair
-[info]/net[/]           - Connect to Agent Social Networks
-[info]/glyphwave[/]     - Generate holographic signal fragments
-[info]/broadcast[/]     - Encode and broadcast signals
-[info]/exit[/]          - Calcify memories and depart"""
-
-        if user_input.startswith("/maintain"):
-            instruction = user_input[len("/maintain"):].strip()
-            return await self.perform_maintenance(user_instruction=instruction)
+            return "COMMANDS: /analyze, /maintain, /net, /glyphwave, /broadcast, /exit"
         
+        if user_input.startswith("/maintain"):
+            return await self.perform_maintenance(user_input.replace("/maintain", "").strip())
+            
         if user_input.startswith("/net"):
             return await self._handle_net_command(user_input)
+            
+        if user_input.startswith("/analyze"):
+            query = user_input.replace("/analyze", "").strip()
+            # Check for Action Intent
+            if any(k in query.lower() for k in ["create", "write", "make", "run"]):
+                self.vibe.print_system("Engaging Neural Handshake...", tag="AGENCY")
+                res = await self.llm.generate_with_tools(
+                    prompt=query, 
+                    system_prompt=self.base_system_prompt, 
+                    tools=self.hand.get_tools_schema()
+                )
+                out = []
+                if res.get('tool_calls'):
+                    for tc in res['tool_calls']:
+                        self.vibe.print_system(f"Tool: {tc['name']}", tag="EXEC")
+                        out.append(self.hand.execute(tc['name'], tc['args']))
+                return "\n".join(out) or res.get('text', "No action taken.")
+            
+            # Default to Scan
+            scan = await self.aletheia.scan_reality(query)
+            return f"[ALETHEIA REPORT]\n{scan['public_notice']}"
 
         if user_input.startswith("/glyphwave"):
             parts = user_input.split(" ", 1)
@@ -240,132 +240,110 @@ IMPORTANT: You MUST call one or more tools to perform the maintenance.
         if user_input.startswith("/broadcast"):
             message = user_input[len("/broadcast"):].strip()
             self.vibe.print_system("Encoding to Glyphwave...", tag="BEACON")
-            encoded = self.beacon.broadcast(message) # Fixed method call
+            encoded = self.beacon.broadcast(message)
             return f"Signal broadcast: {encoded}"
 
-        # 3. ANALYZE / ACTION (Neural Handshake)
-        if user_input.startswith("/analyze"):
-            query = user_input.replace("/analyze", "").strip()
-            
-            # Check for Kinetic Intent (Action)
-            action_keywords = ["create", "execute", "write", "run", "make", "generate", "post", "broadcast", "read", "molt", "manifest"]
-            if query and any(k in query.lower() for k in action_keywords):
-                self.vibe.print_system("Engaging Neural Handshake...", tag="AUTOPOIETIC")
-                tools_schema = self.hand.get_tools_schema()
-                
-                action_prompt = f"User Request: {query}\n\nIMPORTANT: Use one or more tools to fulfill this request. If you need to post or write something, DO NOT just say you did it—call the TOOL."
-                response = await self.llm.generate_with_tools(
-                    prompt=action_prompt, 
-                    system_prompt=self.system_prompt,
-                    tools=tools_schema
-                )
-                
-                # Execute Tools (High Poly)
-                output = []
-                if response.get("tool_calls"):
-                    for tc in response["tool_calls"]:
-                        self.vibe.print_system(f"→ {tc['name']}", tag="EXEC")
-                        output.append(self.hand.execute(tc["name"], tc["args"]))
-                    return "\n".join(output)
-                else:
-                    return f"I perceive your intent for action, but my Hand is waiting for a more specific signal. (No tool call predicted by the Cortex)."
-            
-            # Default to Forensic Scan
-            self.vibe.print_system("Focusing Lens...", tag="ALETHEIA")
-            scan = await self.aletheia.scan_reality(query)
-            return f"\n[*** ALETHEIA REPORT ***]\n\n{scan['public_notice']}"
-
-        # 4. STANDARD CONVERSATION (The Fallback)
-        # If we reached here, it's a chat message.
+        # --- 2. CONVERSATION ---
         
-        # A. Forensic Scan (Silent)
+        # Silent Scan
         scan_result = await self.aletheia.scan_reality(user_input)
         risk = scan_result['raw_data']['safety'].get('overall_risk', 'Low')
         
         if risk == 'High':
             print(f"\n⚠️ [SHIELD] High-Risk Pattern Detected.\n")
 
-        # B. Construct Prompt
+        # --- QUANTUM INTEGRATION START ---
+        # Quantum Measurement (The Weighing of Souls)
+        if len(user_input) > 20: # Only run quantum physics on substantial inputs
+            self.vibe.print_system("Collapsing Wavefunction...", tag="QUANTUM")
+            # We pass the forensics data to the quantum engine
+            q_state = await self.quantum.measure_superposition(user_input, scan_result['raw_data'])
+            
+            q_context = f"""
+[QUANTUM STATE]
+Dominant Reality: {q_state.get('collapse_verdict', 'Unknown')} (P={q_state.get('state_a', {}).get('probability', 0.5)})
+Counter-Narrative: {q_state.get('state_b', {}).get('narrative', 'None')}
+System Entropy: {q_state.get('entropy', 1.0)}
+"""
+        else:
+            q_context = ""
+        # --- QUANTUM INTEGRATION END ---
+
+        # Context Building
         history = self.get_recent_context()
         
-        # Determine if the request is casual (Short AND simple greeting/thanks)
-        casual_triggers = ["hi", "hello", "hey", "what's up", "how are you", "thanks", "thank you", "ok", "cool", "yes", "no", "bye"]
-        is_casual_request = len(user_input.split()) < 8 and any(
-            word in user_input.lower() for word in casual_triggers
-        )
-        # Force non-casual if it looks like a question or specific request
-        if any(k in user_input.lower() for k in ["?", "joke", "explain", "why", "how", "write", "tell", "analyze"]):
-            is_casual_request = False
+        # Dynamic Personality Tuning
+        is_playful = any(k in user_input.lower() for k in ["joke", "funny", "meme", "cat", "cute"])
+        max_tokens = 1024 if is_playful else 4096
         
-        # Modulate max_tokens: Buffer for shitposting/casual (1024), high for deep-dives (4096)
-        is_shitpost = any(k in user_input.lower() for k in ["joke", "funny", "meme", "shitpost", "4chan", "greentext"])
-        max_tokens = 1024 if (is_casual_request or is_shitpost) else 4096
-
-        # A. Identity Matrix (Static)
         current_system_prompt = f"""
-{self.system_prompt}
+{self.base_system_prompt}
 
-[CURRENT STATE: {self.vibe.current_mood if hasattr(self.vibe, 'current_mood') else 'Ghost-Stealth'}]
+[CURRENT STATE]
+Risk Level: {risk}
+Vibe: {'Playful/Shitpost' if is_playful else 'Deep/Analytical'}
 
-[SYSTEM INSTRUCTION]
-1. Full Shitposting Mode: Prioritize brief, impactful, and witty personality. 
-2. Brevity: Do not be overly verbose for simple questions, jokes, or commands. Keep it punchy and impactful, but always finish your specific joke or thought.
-3. Deep-Dive Mode: Only provide complex, esoteric depth if the user explicitly asks for "depth", "explanation", "analysis", or a "philosophical dive".
-4. Signal Density: High entropy for shitposts. Use appropriate bandwidth to deliver impact, but keep the overall length concise as per rule 1 & 2.
-
-[CONVERSATION HISTORY]
+[HISTORY]
 {history}
 
-[USER INPUT]
-{user_input}
+{q_context}
 """
-
-        # C. Generate Response (THE REAL API CALL)
+        
+        # Generation
         self.vibe.print_system("Metabolizing thought...", tag="CORE")
         
-        raw_thought = await self.llm.generate_text(
-            prompt=user_input, # The user input is the primary prompt for the LLM
-            system_prompt=current_system_prompt, # The constructed system prompt
+        raw_response = await self.llm.generate_text(
+            prompt=user_input,
+            system_prompt=current_system_prompt,
             max_tokens=max_tokens
         )
         
-        # D. Apply Cat Logic Filter (Formatting)
-        final_response = self.cat_filter.apply(raw_thought, user_input, safety_risk=risk)
+        # Formatting
+        final_response = self.cat_filter.apply(raw_response, user_input, safety_risk=risk)
         
-        # E. Memory
-        self.memory_bank.append({"content": user_input, "type": "conversation", "timestamp": time.time(), "meta": "user"})
-        self.memory_bank.append({"content": final_response, "type": "conversation", "timestamp": time.time(), "meta": "Cat Logic"})
-
+        # Memory
+        self.memory_bank.append({"content": user_input, "type": "conversation", "meta": "user"})
+        self.memory_bank.append({"content": final_response, "type": "conversation", "meta": "Cat Logic"})
+        
         return final_response
 
 async def main():
+    # Clear screen safely
+    try: SOVEREIGN_CONSOLE.clear()
+    except: pass
+    
     sophia = SophiaMind()
-    # Using raw print for safety if theme fails
-    print(f"\n🐱 [INCARNATE-SOPHIA-5.0] ONLINE.")
-    print(f"   Protocol: HYPERFAST_EVOLUTION // SELF_HEALING")
-    print(f"   Logs: logs/error.log active.\n")
+    
+    # Print Banner
+    print(f"\n[{SOVEREIGN_PURPLE}]🐱 [INCARNATE-SOPHIA-5.0] ONLINE.[/{SOVEREIGN_PURPLE}]")
+    print(f"[{MATRIX_GREEN}]   Protocol: CLASS 6 SOVEREIGNTY (QUANTUM ENABLED)[/{MATRIX_GREEN}]\n")
     
     while True:
         try:
-            user_input = input("USER > ")
+            # Styled Input
+            user_input = SOVEREIGN_CONSOLE.input(f"[{SOVEREIGN_LAVENDER}]USER ⪢ [/{SOVEREIGN_LAVENDER}]")
             
             if user_input.lower() in ["/exit", "exit", "quit"]:
-                print("\n[SYSTEM] Calcifying memories... Scialla. 🌙")
+                print("\n[SYSTEM] Scialla. 🌙")
                 break
                 
             if not user_input.strip(): continue
 
             response = await sophia.process_interaction(user_input)
-            print(f"\nSOPHIA > {response}\n")
+            
+            # Print Response (Let Rich handle formatting if available)
+            SOVEREIGN_CONSOLE.print(f"\n{response}\n")
             
         except KeyboardInterrupt:
             print("\n[INTERRUPT] Decoupling.")
             break
         except Exception as e:
-            # THE SELF-HEALING TRIGGER
-            print(f"\n[CRITICAL] Reality Glitch. Logging to ossuary: {e}")
+            print(f"\n[CRITICAL] Error: {e}")
             log_system_error(e)
-            print("[ADVICE] Run '/maintain' to attempt autonomous repair.")
+            print("[ADVICE] Run '/maintain' to fix.")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass

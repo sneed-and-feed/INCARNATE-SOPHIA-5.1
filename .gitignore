@@ -53,3 +53,7 @@ target/
 # Secret Management
 .env
 .env.local
+logs/
+*.meta.json
+cat_*.py
+main_*.py
