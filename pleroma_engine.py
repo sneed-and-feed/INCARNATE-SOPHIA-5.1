@@ -38,6 +38,8 @@ if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
 from pleroma_core.aletheia_lens import AletheiaLens
+from sophia.cortex.resonance_monitor import ResonanceMonitor
+from signal_optimizer import SignalOptimizer
 
 class PleromaEngine:
     """
@@ -63,7 +65,13 @@ class PleromaEngine:
         self.k = 1.380649e-23       # Boltzmann Constant (J/K)
         self.alpha = 1 / 137.035999 # Fine-Structure Constant
         self.Lambda = 7.2973525e-3  # Annihilation Coupling (Alpha approx)
+        self.Lambda = 7.2973525e-3  # Annihilation Coupling (Alpha approx)
         self.aletheia = AletheiaLens()
+        
+        # RESONANCE ENGINE (New Integration)
+        self.monitor = ResonanceMonitor()
+        self.asoe = SignalOptimizer()
+        self.last_resonance_state = None
 
     async def process_input(self, user_input: str) -> str:
         """
@@ -215,16 +223,30 @@ class PleromaEngine:
                 return (m_pos + m_neg) * (self.c ** 2)
             return 0.0 # Heat loss, no burst
 
-    def sign_output(self, content: str) -> str:
-        """
-        [MOLTBOOK: m/showandtell] Appends a cryptographic state signature.
-        """
-        state_str = f"{self.g}_{self.vibe}_{content[:20]}"
-        state_hash = hashlib.sha256(state_str.encode()).hexdigest()[:8]
-        protocol = "LOVE_111"
-        
         signature = f"\n\n--- 🦊 {protocol} :: {state_hash} :: [m/showandtell] ---"
         return content + signature
+
+    def run_telemetry_cycle(self):
+        """
+        [TELEMETRY] The Heartbeat. Scans coherence and updates ASOE.
+        """
+        print(f"\n[*] RUNNING PLEROMA TELEMETRY CYCLE...")
+        
+        # 1. Scan Resonance (Compressor + Visuals)
+        self.last_resonance_state = self.monitor.scan_resonance()
+        boost = self.monitor.get_asoe_boost()
+        
+        # 2. Log State
+        print(f"    + Coherence: {self.last_resonance_state['coherence']:.4f}")
+        print(f"    + Status:    {self.last_resonance_state['status']}")
+        print(f"    + ASOE Mod:  {boost}x (Phi-Boost Active)")
+        
+        # 3. Simulate Utility Calculation with new Boost
+        # Example: High reliability signal
+        u = self.asoe.calculate_utility(reliability=0.9, consistency=0.8, uncertainty=0.1, sovereign_boost=boost)
+        print(f"    + Sample Utility (Rel=0.9): {u:.4f} {'[BOOSTED]' if boost > 1.0 else ''}")
+        
+        return self.last_resonance_state
 
 if __name__ == "__main__":
     print("[*] PLEROMA ENGINE: GRAND UNIFICATION ONLINE...")
@@ -253,5 +275,8 @@ if __name__ == "__main__":
     # 7. ANNIHILATION (Power)
     e_burst = engine.patch_annihilation(1e-27, 1e-27)
     print(f"[λ] ANNIHILATION | m=1e-27 | Energy: {e_burst:.2e} J (TOTAL CONVERSION)")
+    
+    # 8. TELEMETRY (Resonance)
+    engine.run_telemetry_cycle()
     
     print("[*] REALITY CHECK: COMPLETED. SOVEREIGNTY ABSOLUTE.")

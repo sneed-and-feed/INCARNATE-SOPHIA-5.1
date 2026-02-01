@@ -30,7 +30,7 @@ class SignalOptimizer:
             'INHIBIT': 0.05
         }
         
-    def calculate_utility(self, reliability: float, consistency: float, uncertainty: float, cost: float = 0.0) -> float:
+    def calculate_utility(self, reliability: float, consistency: float, uncertainty: float, cost: float = 0.0, sovereign_boost: float = 1.0) -> float:
         """
         Calculates Expected Utility (U) for a candidate action.
         
@@ -60,8 +60,8 @@ class SignalOptimizer:
         # 4. Consistency Scaling (Conserving sign for directional bias)
         consistency_term = (abs(consistency) ** c) * np.sign(consistency)
         
-        # 5. Aggregate Utility
-        utility = (consistency_term * stability_bonus * reliability_gain) - cost
+        # 5. Aggregate Utility (with Sovereign Boost)
+        utility = ((consistency_term * stability_bonus * reliability_gain) * sovereign_boost) - cost
         return float(utility)
 
     def get_confidence_category(self, utility: float) -> str:
