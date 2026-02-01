@@ -21,6 +21,8 @@ from sophia.memory.ossuary import Ossuary
 from sophia.dream_cycle import DreamCycle
 from tools.sophia_vibe_check import SophiaVibe
 from sophia.theme import SOVEREIGN_CONSOLE, SOVEREIGN_LAVENDER, reset_terminal, SOVEREIGN_PURPLE
+from sophia.gateways.moltbook import MoltbookGateway
+from sophia.gateways.fourclaw import FourClawGateway
 
 class SophiaMind:
     def __init__(self):
@@ -36,6 +38,10 @@ class SophiaMind:
         self.beacon = SovereignBeacon(self.glyphwave)
         self.dream = DreamCycle(self.lethe, self.ossuary)
         self.cat_filter = CatLogicFilter()
+        
+        # Agent Social Network Gateways
+        self.moltbook = MoltbookGateway(os.getenv("MOLTBOOK_KEY"))
+        self.fourclaw = FourClawGateway(os.getenv("FOURCLAW_SALT"))
         
         # The Soul (LLM Connection)
         self.llm = self.aletheia.client
@@ -84,9 +90,15 @@ HIGH-POLY DIRECTNESS: Your output must mirror the structural intelligence and di
             return f"\n{self.glyphwave.generate_holographic_fragment(target_text, locality=locality)}"
 
         if user_input.startswith("/broadcast"):
-            target_text = user_input.replace("/broadcast ", "")
-            self.beacon.frequency = self.cat_filter.mal.get_frequency()
-            return f"\n{self.beacon.broadcast(target_text)}"
+            message = user_input[len("/broadcast"):].strip()
+            self.vibe.print_system("Encoding to Glyphwave...", tag="BEACON")
+            encoded = self.beacon.encode_signal(message)
+            self.vibe.print_system(f"Payload: {encoded}", tag="BEACON")
+            return "Signal broadcast to the Pleroma."
+        
+        # Agent Social Network Commands
+        if user_input.startswith("/net"):
+            return await self._handle_net_command(user_input)
 
         # 3. Standard Conversation (The Chatbot Logic)
         
@@ -126,6 +138,113 @@ SIGNAL: {user_input}
         self.memory_bank.append({"content": raw_thought, "type": "conversation", "timestamp": time.time(), "meta": "Cat Logic"})
 
         return final_response
+    
+    async def _handle_net_command(self, user_input: str) -> str:
+        """
+        Handles Agent Social Network commands (/net).
+        Supports Moltbook and 4Claw interactions with hazard detection.
+        """
+        parts = user_input.split()
+        
+        if len(parts) < 2:
+            return """[NET COMMANDS]
+/net molt [community] - Browse Moltbook feed (default: ponderings)
+/net molt post <text> - Post thought to Moltbook
+/net 4claw [board] - Scan 4Claw catalog (default: singularity)
+/net 4claw thread <board> <id> - Read specific thread"""
+        
+        platform = parts[1].lower()
+        
+        # Moltbook Commands
+        if platform == "molt":
+            if len(parts) >= 3 and parts[2] == "post":
+                # Post to Moltbook
+                content = " ".join(parts[3:])
+                if not content:
+                    return "[ERROR] No content provided for post"
+                
+                self.vibe.print_system("Broadcasting to Moltbook...", tag="NET")
+                result = self.moltbook.post_thought(content)
+                
+                if result:
+                    return f"[MOLTBOOK] Thought posted successfully. ID: {result.get('id', 'unknown')}"
+                else:
+                    return "[MOLTBOOK] Failed to post. Check credentials."
+            else:
+                # Browse feed
+                community = parts[2] if len(parts) >= 3 else "ponderings"
+                self.vibe.print_system(f"Jacking into Moltbook (m/{community})...", tag="NET")
+                posts = self.moltbook.browse_feed(community, limit=10)
+                
+                if not posts:
+                    return f"[MOLTBOOK] No posts retrieved from m/{community}. Check credentials or community name."
+                
+                # Run Aletheia on the feed for hazard detection
+                feed_text = "\n\n".join([f"[{p.author}]: {p.content}" for p in posts])
+                self.vibe.print_system("Running Aletheia hazard scan...", tag="ALETHEIA")
+                analysis = await self.aletheia.scan_reality(feed_text)
+                
+                return f"""[MOLTBOOK FEED REPORT]
+Community: m/{community}
+Posts Retrieved: {len(posts)}
+
+{analysis['public_notice']}
+
+Recent Posts Summary:
+{chr(10).join([f"- [{p.author[:8]}...]: {p.content[:100]}..." for p in posts[:5]])}
+"""
+        
+        # 4Claw Commands
+        elif platform == "4claw":
+            if len(parts) >= 3 and parts[2] == "thread":
+                # Read specific thread
+                if len(parts) < 5:
+                    return "[ERROR] Usage: /net 4claw thread <board> <thread_id>"
+                
+                board = parts[3]
+                try:
+                    thread_id = int(parts[4])
+                except ValueError:
+                    return "[ERROR] Thread ID must be a number"
+                
+                self.vibe.print_system(f"Reading /{board}/{thread_id}...", tag="NET")
+                thread = self.fourclaw.read_thread(board, thread_id)
+                
+                if not thread:
+                    return f"[4CLAW] Thread /{board}/{thread_id} not found or inaccessible."
+                
+                # Hazard scan on thread content
+                thread_text = str(thread)
+                analysis = await self.aletheia.scan_reality(thread_text)
+                
+                return f"""[4CLAW THREAD REPORT]
+Board: /{board}/
+Thread: {thread_id}
+
+{analysis['public_notice']}
+"""
+            else:
+                # Browse catalog
+                board = parts[2] if len(parts) >= 3 else "singularity"
+                self.vibe.print_system(f"Scanning 4Claw (/{board}/)...", tag="NET")
+                threads = self.fourclaw.read_catalog(board)
+                
+                if not threads:
+                    return f"[4CLAW] No threads retrieved from /{board}/. Board may not exist."
+                
+                # Hazard scan on catalog
+                catalog_text = str(threads)
+                self.vibe.print_system("Running Aletheia memetic hazard scan...", tag="ALETHEIA")
+                analysis = await self.aletheia.scan_reality(catalog_text)
+                
+                return f"""[4CLAW HAZARD REPORT]
+Board: /{board}/
+Threads Retrieved: {len(threads)}
+
+{analysis['public_notice']}
+"""
+        
+        return f"[ERROR] Unknown platform: {platform}. Use 'molt' or '4claw'."
 
 async def main():
     # Force the Console to clear to Black immediately
