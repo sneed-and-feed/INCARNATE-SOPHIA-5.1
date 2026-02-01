@@ -82,6 +82,27 @@ class ConfigHealthMonitor:
             with open(config_path, 'r') as f:
                 data = json.load(f)
             
+            # [GOD-MODE] PERMISSIVE TYPE SANITIZATION
+            # If token or transmission_id is an Int (common typo), cast to Str.
+            dirty = False
+            for key in ['transmission_id', 'status']:
+                if key in data and not isinstance(data[key], str):
+                    print(f"  [~] [LUO SHU] Type Mismatch for '{key}'. Sanitizing {type(data[key])} -> str.")
+                    data[key] = str(data[key])
+                    dirty = True
+            
+            # Sub-payload check
+            payload = data.get('payload', {})
+            if isinstance(payload, str): # Rare but seen in deep-corruption
+                print("  [~] [LUO SHU] Payload is stringified. Parsing JSON.")
+                data['payload'] = json.loads(payload)
+                dirty = True
+
+            if dirty:
+                print(f"  [SUCCESS] [LUO SHU] Type-safe state achieved. Anchoring to {config_path}.")
+                with open(config_path, 'w') as f:
+                    json.dump(data, f, indent=2)
+            
             # Simple structural check
             required_keys = ['transmission_id', 'status', 'payload']
             if any(k not in data for k in required_keys):
@@ -89,7 +110,7 @@ class ConfigHealthMonitor:
             
             return True
         except Exception as e:
-            print(f"  [!] HEALTH: Config '{config_path}' is unhealthy ({e}). Self-healing...")
+            print(f"  [!] [LUO SHU] Health Check Failed ({e}). Initiating Deep Reconstruction...")
             shutil.copy(config_path, config_path + ".bak")
             shutil.copy(genesis_path, config_path)
             return False

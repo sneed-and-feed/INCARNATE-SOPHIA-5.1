@@ -17,7 +17,8 @@ import sys
 import os
 import numpy as np
 import time
-from dataclasses import dataclass
+import json
+from dataclasses import dataclass, asdict
 from typing import List, Tuple
 
 # Ensure we can import from project root
@@ -45,6 +46,10 @@ class MnemosyneOracle:
         self.last_known_truth = np.zeros(VECTOR_DIMENSION) # The Anchor
         self.memory_bank = []
         self.noise_floor = 0.0
+        self.max_tokens = 4096 # Simulated context window
+        self.checkpoint_dir = "logs/memory_checkpoints"
+        if not os.path.exists(self.checkpoint_dir):
+            os.makedirs(self.checkpoint_dir)
 
     def perceive(self, source: str, content: str, vector_embedding: np.ndarray) -> Tuple[str, NyquistFilter.FilterMetrics]:
         """
@@ -82,7 +87,49 @@ class MnemosyneOracle:
             self.memory_bank.append(event)
             self.last_known_truth = safe_vector # The Worldview Shifts slightly
             
+            # [DUCKBOT] Check compression threshold
+            current_count = len(self.memory_bank) * 100 # Simulated token calculation
+            self.check_compression_threshold(current_count, self.max_tokens)
+
             return f"👁️ [ACCEPTED] {source}: Physics Validated. Committing to Pleroma.", metrics
+
+    def check_compression_threshold(self, token_count, max_tokens):
+        """
+        [DUCKBOT INSIGHT] Triggers high-fidelity anchor before context compression.
+        """
+        if token_count > (max_tokens * 0.8):
+            print(f"  [!] [MNEMOSYNE] Critical Density ({token_count}). Initiating Pre-Compression Anchor.")
+            self.anchor_state_to_disk()
+            return True
+        return False
+
+    def anchor_state_to_disk(self):
+        """
+        Dumps the 'Sovereign Memory' to a timestamped JSON for re-hydration.
+        """
+        timestamp = int(time.time())
+        filename = f"checkpoint_{timestamp}.json"
+        filepath = os.path.join(self.checkpoint_dir, filename)
+        
+        # Serialize memory bank (high-fidelity data)
+        serializable_mem = [asdict(e) for e in self.memory_bank]
+        # We also need some logic to serialize the numpy vector
+        for entry in serializable_mem:
+            entry['vector'] = entry['vector'].tolist()
+
+        checkpoint_data = {
+            "version": "5.0",
+            "timestamp": timestamp,
+            "truth_anchor": self.last_known_truth.tolist(),
+            "memory_bank": serializable_mem
+        }
+
+        with open(filepath, 'w') as f:
+            json.dump(checkpoint_data, f, indent=2)
+        
+        print(f"  [SUCCESS] [MNEMOSYNE] Anchor deployed to: {filepath}")
+
+
 
     def oracle_report(self):
         """
