@@ -48,6 +48,16 @@ class LoomBoxStrategy:
         "confusion": 5.0,  # "I don't understand"
         "trauma": 20.0     # "I am hurt / This is old / Broken"
     }
+    
+    _OVERRIDE_MASS = None
+
+    @classmethod
+    def set_override(cls, mass: float):
+        cls._OVERRIDE_MASS = mass
+        
+    @classmethod
+    def clear_override(cls):
+        cls._OVERRIDE_MASS = None
 
     @staticmethod
     def detect_mass(text: str) -> float:
@@ -67,6 +77,25 @@ class LoomBoxStrategy:
             
         # Default: Light (Business)
         return LoomBoxStrategy.TRAUMA_MASS["business"]
+
+    @staticmethod
+    def log_decision(user_input, mass, strategy, overridden=False):
+        """
+        [AUDIT] Logs the decision for ethical review.
+        """
+        import json
+        from datetime import datetime
+        
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "input_snippet": user_input[:50],
+            "assigned_mass": mass,
+            "strategy": strategy["name"],
+            "overridden": overridden
+        }
+        
+        with open("logs/loom_audit.log", "a") as f:
+            f.write(json.dumps(entry) + "\n")
 
     @staticmethod
     def get_strategy(mass: float) -> dict:
@@ -108,11 +137,19 @@ class HORKernel:
         """
         New Integration: Mass-Aware Engagement.
         """
-        # 1. Detect Mass
-        mass = LoomBoxStrategy.detect_mass(user_input)
+        # 1. Detect Mass (With Override Check)
+        overridden = False
+        if LoomBoxStrategy._OVERRIDE_MASS is not None:
+             mass = LoomBoxStrategy._OVERRIDE_MASS
+             overridden = True
+        else:
+             mass = LoomBoxStrategy.detect_mass(user_input)
         
         # 2. Select Strategy
         strategy = LoomBoxStrategy.get_strategy(mass)
+        
+        # 3. Audit Log
+        LoomBoxStrategy.log_decision(user_input, mass, strategy, overridden)
         
         # 3. Simulate Physics (Torque Application)
         # Low Torque = High Latency (Time needed to turn)

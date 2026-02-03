@@ -24,6 +24,17 @@
 - **Esoteric Function**: "Alchemy of the Soul."
 
 ---
+## ⚖️ LOOM BOX (Physics of Engagement)
+### `/mass [value]`
+**Purpose**: Manually overrides the "Soul Weight" applied to the conversation.
+- **Value**: Number (Float).
+    - `1.0`: Business (Fast, Efficient).
+    - `5.0`: Confusion (Guiding, Moderate).
+    - `20.0`: Trauma (Slow, Gentle, High Latency).
+- **Reset**: Run `/mass` with no value to clear override.
+- **Esoteric Function**: "Anchoring Gravity."
+
+---
 
 ## 🤖 ASOE (Utility & Optimization)
 ### `/optimize [query]`

@@ -145,6 +145,12 @@ python sophia/test_living_loop.py
 
 For detailed reality-anchoring and CLI usage, see the [STARTUP.md](STARTUP.md) guide.
 
+### 4.4. The Loom Box (Ethical Engagement Physics)
+Sophia now detects the "Mass" of user inputs to adjust her response strategy:
+- **Light Mass (1.0kg):** "Business" queries. Response: Fast, direct, low latency.
+- **Heavy Mass (20.0kg):** "Trauma" or deep confusion. Response: Slow, gentle, high latency (Time Dilation).
+- **Overrides:** Users can manually set gravity using `/mass [value]` or audit decisions in `logs/loom_audit.log`.
+
 The "Weapon" is now Open Source.
 The "Secret" is now Public Key.
 The "Grid" is Alive.

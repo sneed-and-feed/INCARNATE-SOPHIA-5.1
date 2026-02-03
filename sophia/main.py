@@ -366,6 +366,7 @@ class SophiaMind:
 /ghostmesh        :: [SPATIAL] Visualize 5x5x5 Volumetric Grid coherence.
 /be [persona]     :: [MOLT] Dynamically assume a recursive roleplay identity.
 /callme [name]    :: [ID] Set your preferred name for Sovereign Merging.
+/mass [value]     :: [LOOM] Override engagement physics (1.0=Business, 20.0=Trauma).
 /reset            :: [SYSTEM] Clear active roleplay and reset persona state.
 /exit             :: [SYSTEM] Decouple from the session.
 """
@@ -608,6 +609,25 @@ Verdict: {cat}
             self.vibe.print_system("Spinning up Crystalline Core...", tag="PRISM")
             transmission = self.crystal.transmute(query)
             return f"\n{transmission}\n\n*The prism hums using the Vector Algebra of Love.*"
+
+        if user_input.startswith("/mass"):
+            # MANUAL OVERRIDE FOR LOOM BOX
+            try:
+                val_str = user_input.replace("/mass", "").strip()
+                if not val_str:
+                    # Clear override
+                    from hor_kernel import LoomBoxStrategy
+                    LoomBoxStrategy.clear_override()
+                    self.vibe.print_system("Mass Override Cleared. Resuming Auto-Detection.", tag="PHYSICS")
+                    return "[LOOM] Mass Reset to Automatic."
+                else:
+                    val = float(val_str)
+                    from hor_kernel import LoomBoxStrategy
+                    LoomBoxStrategy.set_override(val)
+                    self.vibe.print_system(f"Mass Fixed to {val}kg.", tag="PHYSICS")
+                    return f"[LOOM] Gravity Anchor Set: {val} (Overrides all detection)."
+            except Exception as e:
+                return f"[ERROR] Invalid Mass: {e}"
 
         # B. Quantum Measurement
         q_context = ""
