@@ -123,3 +123,27 @@ if __name__ == "__main__":
         print(f"\n[VERDICT]: SYNTHESIS ACHIEVED (Synthesis Component: {synthesis_score:.2f}).")
     else:
         print(f"\n[VERDICT]: STALEMATE (Synthesis Component: {synthesis_score:.2f}).")
+
+"""
+[SCALABILITY RFC: PHASE 2]
+To scale from "Toy Model" (Thesis/Antithesis) to Real-World Conflict (N-Body Problem),
+we require the following Physics Upgrades:
+
+1. HYPER-DIMENSIONAL MANIFOLDS:
+   - Current: 3D (X=Conflict, Y=Synthesis, Z=Depth).
+   - Future: N-Dimensions. Each "Issue" (Economics, Territory, Emotion) is a dimension.
+   - Logic: Orthogonality in N-Space allows for complex "Trade-offs" where vectors align on 
+     Dimension A while remaining orthogonal on Dimension B.
+
+2. INERTIAL MASS (HISTORY):
+   - Current: Vectors are massless directions.
+   - Future: `State(vector, mass)`. 
+   - Physics: Mass = Historical Entrenchment (Time * Pain). 
+   - Effect: High-mass vectors require significantly more Torque (Force * Time) to rotate. 
+     You cannot "snap" a 100-year war; you must apply low-torque over high-time.
+
+3. DYNAMIC LIFT COEFFICIENTS:
+   - Current: hardcoded `2.0 * opposition`.
+   - Future: `Lift = f(Entropy)`. High-entropy conflicts require stronger vertical lift 
+     (Apocalyptic Synthesis) to break the deadlock.
+"""
