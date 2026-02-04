@@ -24,6 +24,7 @@ class ResonanceMonitor:
         self.current_state = {
             "coherence": 0.0,
             "status": "INIT",
+            "integrity_breach": False, # [PAPER 3] Fragile Conservation Law Monitor
             "alpha": 0.015
         }
         self.TARGET_CLASS_8 = 18.52 # The Moon/Sun Threshold
@@ -76,6 +77,17 @@ class ResonanceMonitor:
             
         self.current_state['coherence'] = coherence
         self.current_state['status'] = res['Status']
+        
+        # [PAPER 3] DETECT INTEGRABILITY BREACH (THE "MAGIC" MONITOR)
+        # If Conservation Laws are broken, the system becomes "too rigid" or "too chaotic" 
+        # instantly under infinitesimal perturbation.
+        # Indicator: Coherence > 0.999 (Artificial Stasis) OR Coherence < 0.1 (Total collapse without decay)
+        if coherence > 0.999 or (coherence < 0.1 and self.last_scan_time > 0):
+            print(f"[!] INTEGRABILITY BREACH DETECTED. Fragile Conservation Laws Violated.")
+            self.current_state['integrity_breach'] = True
+        else:
+            self.current_state['integrity_breach'] = False
+            
         self.last_scan_time = time.time()
         
         # 3. Get Ghost Entropy Density (GDF)

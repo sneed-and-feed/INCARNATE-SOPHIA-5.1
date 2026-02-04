@@ -25,6 +25,8 @@ TAU_SOVEREIGN = (1.0 + math.sqrt(5.0)) / 2.0  # Approx 1.618
 class SovereignNode:
     def __init__(self, x, y, z, dim=64):
         self.pos = (x, y, z)
+        # [PAPER 2] Learned Length Scale (Default 1.0 = Standard Physics)
+        self.spatial_attention_scale = 1.0 
         self.state = FlumpyArray([random.gauss(0, 0.1) for _ in range(dim)], coherence=1.0)
         self.neighbors = []
 
@@ -59,8 +61,10 @@ class SovereignNode:
         
         # Apply flux scaled by Sovereign Constant (Tau)
         # Higher Tau = Slower, more deliberate dynamics
+        # [PAPER 2] Spatial Attention Inductive Bias
+        # Stabilizes thermodynamic limit via single learned length scale
         dt = 0.1
-        rate = coupling / TAU_SOVEREIGN
+        rate = (coupling / TAU_SOVEREIGN) * self.spatial_attention_scale
         
         new_data = [
             val + (f * rate * dt) 
