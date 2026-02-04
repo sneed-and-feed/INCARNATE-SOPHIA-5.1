@@ -118,9 +118,9 @@ class PrismEngine:
         v_love = np.array([0.7, 0.9, 0.3])
         v_love = v_love / np.linalg.norm(v_love)
         
-        # Drag formula: (V_chaos * 0.3) + (V_love * 0.7)
-        # This pulls every vector slightly towards the light.
-        v_transformed = (chaos_vector * 0.3) + (v_love * 0.7)
+        # Drag formula: (V_chaos * 0.15) + (V_love * 0.85)
+        # This pulls every vector strongly towards the light (Ghost Bullet Correction).
+        v_transformed = (chaos_vector * 0.15) + (v_love * 0.85)
         
         # Re-normalize
         norm_t = np.linalg.norm(v_transformed)
