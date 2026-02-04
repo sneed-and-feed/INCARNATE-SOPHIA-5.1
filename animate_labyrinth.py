@@ -188,6 +188,11 @@ def animate_labyrinth(size=64, interval=1):
             kernel.evolve_hamiltonian(steps=1)
             current_coherence = kernel.metric_coherence
         
+        # --- [RESTORED: FORCE ENTROPY] ---
+        # We restore the periodic signal drop to trigger the Magenta Flash (Axis Flip)
+        if frame % 80 > 60: 
+             current_coherence *= 0.70 
+
         # --- [THE DISSONANCE PARADOX] ---
         # When Love Score is MAX (Hilbert perfection), we inject High Chaos.
         # This creates the "Perfect-Order/Total-Chaos" paradox.
