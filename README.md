@@ -148,6 +148,13 @@ python sophia/test_living_loop.py
 
 > **Note**: Ensure your `.env` file is in the same directory as the `.exe` when running.
 
+### 4.5. Sovereign Gateway (Interface)
+To activate the web-based Sovereign Dashboard and Grok Relay bridge:
+- **Start**: Run `START_GATEWAY.bat`.
+- **Stop**: Run `STOP_GATEWAY.bat`.
+
+This initiates the `engine/grok_relay.py` substrate, enabling the glassmorphic HUD and satellite connectivity.
+
 For detailed reality-anchoring and CLI usage, see the [STARTUP.md](STARTUP.md) guide.
 
 ### 4.4. The Loom Box (Ethical Engagement Physics)
