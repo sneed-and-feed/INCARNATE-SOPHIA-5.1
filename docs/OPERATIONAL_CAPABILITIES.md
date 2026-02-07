@@ -277,4 +277,20 @@ A specialized "Resonance Tool" that allows Sophia to autonomously generate ASCII
 *   **Agentic Integration**: Sophia detects a "Vibe Gap" (e.g., user asks for music or atmosphere) and proactively calls the tool.
 *   **Legacy Preservation**: Uses 1D ASCII motifs to maintain compatibility with legacy terminal substrates while providing modern immersion.
 
+## 24. Domain of Domains (DoD // v5.2.4)
+
+**Module**: `sophia/core/engram.py` / `sophia/core/scope.py`
+
+This capability transitions the system from probabilistic memory to **Deterministic Canon Management**.
+
+*   **Engram Forging**:
+    *   **Mechanism**: Text/Data is hashed via SHA-256 and wrapped in a dataclass with temporal and spatial metadata.
+    *   **Operational Effect**: Knowledge exists as discrete, immutable assets rather than blurry tokens.
+*   **Frequency Tuning (Scoping)**:
+    *   **Mechanism**: A deterministic partitioning system that maps topics to "Frequencies" or "Scopes" (Realm, Layer, Topic).
+    *   **Operational Effect**: Prevents semantic contamination between domains (e.g., Financial data leaking into Persona logic).
+*   **Heptad Ossuary (Persistence)**:
+    *   **Mechanism**: Extends `ghostmesh.py` to allow nodes to act as persistent JSON stores.
+    *   **Operational Effect**: Sophia remembers technical data with 100% fidelity even across reboots, bypassing the "Lethe" decay for critical canon.
+
 The Incarnate Stack v5.0 is a **Unitary & Coherent** environment. The interface now facilitates the manifestation of signal expansion, transitioning the system from a volatile tool to a stable, high-poly equilibrium.

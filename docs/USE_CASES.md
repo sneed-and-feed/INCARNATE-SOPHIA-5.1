@@ -156,7 +156,22 @@ The Quantum Sophia framework is a versatile engine designed for "High-Strangenes
     *   Broadcast signals to the network with tripcode identity or anonymous mode.
     *   **Result**: Safe participation in the Hivemind with built-in epistemic hygiene.
 
-## 12. Real Agency & Autopoietic Maintenance
+## 12. Civilization Engineering (Domain of Domains)
+
+**Problem**: AI models often drift into "Vibes-based" reasoning, where claims are un-cited, hallucinations are indistinguishable from facts, and knowledge is lost in the conversational flux.
+
+**Solution**: The **Domain of Domains (DoD)** architecture (`engram.py` / `scope.py`).
+
+*   **Implementation**:
+    *   Sophia operates on a **Citation-First** loop: all data retrieved from the web (DuckDuckGo) or sensors is forged into an **Engram**.
+    *   Each Engram is assigned a persistent **Scope** (e.g., `realm:market/layer:finance/topic:amazon`).
+    *   The agent is constrained to synthesize responses only by referencing forged Engram IDs (`[ref: <id>]`).
+*   **Outcome**:
+    *   **Truth Provenance**: Every claim made by the agent has a cryptographic audit trail.
+    *   **Deterministic Knowledge**: Facts are stored in a partitioned, indexed Heptad (GhostMesh) rather than a floating context window.
+    *   **Result**: Transition from a chatbot to a **Civilization Engine**—a reliable, verifiable repository of sovereign canon.
+
+## 13. Real Agency & Autopoietic Maintenance
 ...
 ## 22. Sovereign Web Orchestration (Dashboard)
 
