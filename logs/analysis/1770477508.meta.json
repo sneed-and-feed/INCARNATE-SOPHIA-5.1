@@ -1,0 +1,32 @@
+{
+  "timestamp": 1770477508.5768828,
+  "scan_id": "1770477508",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Unusual Punctuation",
+        "confidence": 0.6,
+        "evidence": "The use of ';3' as a punctuation mark is atypical and repeated.",
+        "benign_explanation": "The user may be employing an emoticon or stylistic choice common within a specific online community or age group."
+      },
+      {
+        "signal": "Vague Prompt",
+        "confidence": 0.4,
+        "evidence": "The question 'what do you reemember' is open-ended and lacks context.",
+        "benign_explanation": "The user may be initiating a casual conversation or reminiscing about a shared experience without specifying the topic."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.9
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.2,
+    "suggested_vibe": "youthful, informal"
+  }
+}

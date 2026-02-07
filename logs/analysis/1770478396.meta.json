@@ -1,0 +1,26 @@
+{
+  "timestamp": 1770478396.7884295,
+  "scan_id": "1770478396",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Uncommon phrasing",
+        "confidence": 0.3,
+        "evidence": "The use of 'T_T' and ';3' are emoticons that might be more common in specific online communities or age groups. The phrase 'moltbook isn't configured' is vague and lacks context.",
+        "benign_explanation": "The user may be employing internet slang common within their specific online social group or expressing a personal quirk in their communication style."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.8
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.3,
+    "suggested_vibe": "tech-oriented, informal"
+  }
+}

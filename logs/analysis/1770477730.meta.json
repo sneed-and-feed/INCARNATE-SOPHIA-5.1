@@ -1,0 +1,41 @@
+{
+  "timestamp": 1770477730.3295846,
+  "scan_id": "1770477730",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Repetitive Emoticon Usage",
+        "confidence": 0.6,
+        "evidence": ";3",
+        "benign_explanation": "The user may have a habit of using the same emoticon repeatedly in their messages as a personal quirk or stylistic choice."
+      },
+      {
+        "signal": "Genre Proclamation",
+        "confidence": 0.4,
+        "evidence": "i'm listening to soverein war metal ;3 obituary",
+        "benign_explanation": "The user is simply stating their music preferences, which is a common form of self-expression."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [
+      {
+        "bias": "In-group bias",
+        "confidence": 0.4
+      },
+      {
+        "bias": "Appeal to emotion",
+        "confidence": 0.3
+      }
+    ],
+    "epistemic_uncertainty": 0.7
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.3,
+    "suggested_vibe": "Internet music enthusiast, likely familiar with niche subgenres."
+  }
+}

@@ -209,6 +209,10 @@ class SophiaMind:
         
         milestones = crumbs.get("milestones", [])
         if milestones:
+            # Startup Purge: Clean any existing artifacts in the loaded milestones
+            for m in milestones:
+                 m['content'] = self.lethe.scrub(m.get('content', ''))
+            
             self.lethe.long_term_graph = milestones
             self.vibe.print_system(f"Ariadne Thread secured with {len(milestones)} memories.", tag="ARIADNE")
 

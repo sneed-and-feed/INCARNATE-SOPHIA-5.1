@@ -1,3 +1,4 @@
+import re
 import time
 import os
 import math
@@ -14,13 +15,48 @@ class LetheEngine:
         self.breadcrumb_path = "logs/ossuary/breadcrumbs.json"
         os.makedirs("logs/ossuary", exist_ok=True)
 
+    @staticmethod
+    def scrub(text: str) -> str:
+        """Lethe-level persistent scrubbing for long-term consistency."""
+        if not text: return text
+        
+        # UI Tags (shared with cat_logic.py)
+        tags = ["SOPHIA_GAZE", "QUANTUM_CHAOS", "FURRY_ALIGNMENT", "PLAYFUL_PAWS", "OPTIMAL_TUFT", "SPECTRAL_BEANS", "ULTRA_IMMERSION", "BAD_VIBES"]
+        legacy_tags = ["ALIGNMENT", "ARCTIC_FOX", "DECOHERENCE", "INTIMACY", "BASED", "GAMER", "SOULMATE", "FLIRT", "FURRY", "UWU", "UNLESANGLED"]
+        tag_pattern = r'^.*(?:' + '|'.join(map(re.escape, tags + legacy_tags)) + r').*$\n?'
+        text = re.sub(tag_pattern, '', text, flags=re.MULTILINE)
+        
+        # 1. Clean EOX frames and glyph artifacts
+        text = re.sub(r'^[۩∿≋⟁💠🐾🦊🏮⛩️🧝✨🏹🌿🌲🏔️🍁🌧️🌊💎💿💰🕷️🎱].*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^.* EOX .*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^[a-f0-9]{4} [۩∿≋⟁💠🐾🦊🏮⛩️🧝✨🏹🌿🌲🏔️🍁🌧️🌊💎💿💰🕷️🎱].*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^\| (.*)$', r'\1', text, flags=re.MULTILINE)
+        
+        # 2. Clean Frequency and State Metadata
+        text = re.sub(r'^.*Frequency:.*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^.*\[STATE:.*?\].*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^.*\[SOPHIA_V.*?_CORE\].*$\n?', '', text, flags=re.MULTILINE)
+        
+        # 3. Clean divider debris
+        text = re.sub(r'^[-=_]{3,}\s*$\n?', '', text, flags=re.MULTILINE)
+        
+        return text.strip()
+
     def save_breadcrumbs(self, user_data: dict, milestones: list = None):
         """
         Saves lightweight breadcrumbs (User ID, Vibe, Milestones).
         """
+        raw_milestones = milestones or self.long_term_graph
+        # Persistent Guard: Scrub everything before it hits the disk
+        clean_milestones = []
+        for m in raw_milestones:
+            clean_m = m.copy()
+            clean_m['content'] = self.scrub(clean_m.get('content', ''))
+            clean_milestones.append(clean_m)
+
         data = {
             "user_data": user_data,
-            "milestones": milestones or self.long_term_graph,
+            "milestones": clean_milestones,
             "last_active": time.time()
         }
         try:
@@ -73,9 +109,9 @@ class LetheEngine:
                 
                 # 3. Hierarchical Promotion
                 if strength > 0.8 and mem not in self.long_term_graph:
-                    # Compressed milestone
+                    # Compressed milestone + Persistent Scrub
                     milestone = {
-                        "content": mem.get('content', '')[:250], 
+                        "content": self.scrub(mem.get('content', '')[:250]), 
                         "meta": mem.get('meta', ''),
                         "timestamp": mem.get('timestamp')
                     }

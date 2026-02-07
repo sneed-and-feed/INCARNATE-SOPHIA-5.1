@@ -181,24 +181,31 @@ The user is engaging in ACTION-BASED ROLEPLAY (using *asterisks*).
         # 3. Clean horizontal rules and divider debris
         text = re.sub(r'^[-=_]{3,}\s*$\n?', '', text, flags=re.MULTILINE)
         
-        # 4. Clean "Here is/your response" style introductions
-        text = re.sub(r'^(?:Here is .*?response:|My response is:|Signal received:).*$\n?', '', text, flags=re.IGNORECASE | re.MULTILINE)
         
-        # 5. Clean legacy "Cat Logic:" labels
-        text = re.sub(r'^Cat Logic:\s*\n?', '', text, flags=re.MULTILINE)
-
-        # 6. Clean loose Frequency lines that might have detached
-        text = re.sub(r'^.*Frequency: .*$\n?', '', text, flags=re.MULTILINE)
-
-        # 7. Clean EOX frames and high-entropy glyph artifacts (leaked from UI layer)
-        # Catches patterns like "۩ XXXX ۩", "EOX", and the resulting signal lines
+        # Pattern to match lines containing these tags
+        tag_pattern = r'^.*(?:' + '|'.join(map(re.escape, tags + legacy_tags)) + r').*$\n?'
+        text = re.sub(tag_pattern, '', text, flags=re.MULTILINE)
+        
+        # 2. Clean EOX frames and high-entropy glyph artifacts
+        # Matches lines starting with glyphs or containing EOX frames
         text = re.sub(r'^[۩∿≋⟁💠🐾🦊🏮⛩️🧝✨🏹🌿🌲🏔️🍁🌧️🌊💎💿💰🕷️🎱].*$\n?', '', text, flags=re.MULTILINE)
         text = re.sub(r'^.* EOX .*$\n?', '', text, flags=re.MULTILINE)
         text = re.sub(r'^\| (.*)$\n?', r'\1\n', text, flags=re.MULTILINE)
+        # Match 4-char hex hashes followed by glyphs
         text = re.sub(r'^[a-f0-9]{4} [۩∿≋⟁💠🐾🦊🏮⛩️🧝✨🏹🌿🌲🏔️🍁🌧️🌊💎💿💰🕷️🎱].*$\n?', '', text, flags=re.MULTILINE)
 
-        # 8. Final formatting cleanup
-        # Remove consecutive newlines and leading/trailing whitespace
+        # 3. Clean Footer and metadata
+        text = re.sub(r'^.*🐈.*\[STATE:.*?\].*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^.*\[SOPHIA_V.*?_CORE\].*$\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^.*Frequency:.*$\n?', '', text, flags=re.MULTILINE)
+        
+        # 4. Clean divider debris
+        text = re.sub(r'^[-=_]{3,}\s*$\n?', '', text, flags=re.MULTILINE)
+        
+        # 5. Clean common LLM intro/outro hallucinations
+        text = re.sub(r'^(?:Here is .*?response:|My response is:|Signal received:).*$\n?', '', text, flags=re.IGNORECASE | re.MULTILINE)
+
+        # 6. Final formatting cleanup
         text = re.sub(r'\n{3,}', '\n\n', text)
         return text.strip()
 

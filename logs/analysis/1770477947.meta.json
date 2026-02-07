@@ -1,0 +1,26 @@
+{
+  "timestamp": 1770477947.7586803,
+  "scan_id": "1770477947",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Unusual Punctuation",
+        "confidence": 0.3,
+        "evidence": "Use of ';3' emoticon.",
+        "benign_explanation": "The user may be expressing playfulness or coyness, which is common in online communication."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.9
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.3,
+    "suggested_vibe": "youthful, casual, internet-mediated"
+  }
+}
