@@ -1,0 +1,31 @@
+{
+  "timestamp": 1770493375.9076583,
+  "scan_id": "1770493375",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Bot-like phrasing or rhythm",
+        "confidence": 0.6,
+        "evidence": "The misspelling of 'thinking' as 'thinkkinng' and the unusual addition of ';3' could indicate an attempt to evade bot detection or a non-standard writing style.",
+        "benign_explanation": "The misspelling and unusual emoticon could simply be a stylistic choice or a typo made by an individual user."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.9
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.4,
+    "suggested_vibe": "playful, casual"
+  },
+  "sovereign_local": {
+    "local_findings": [],
+    "overall_risk_score": 0.1,
+    "engine": "SOVEREIGN_LOCAL_V1"
+  }
+}

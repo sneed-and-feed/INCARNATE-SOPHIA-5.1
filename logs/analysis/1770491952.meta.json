@@ -1,0 +1,52 @@
+{
+  "timestamp": 1770491952.0762525,
+  "scan_id": "1770491952",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Offensive Language",
+        "confidence": 0.8,
+        "evidence": "\"shitposting\"",
+        "benign_explanation": "The user may be using offensive language without intending to coordinate or deceive."
+      },
+      {
+        "signal": "Unusual Phrase",
+        "confidence": 0.6,
+        "evidence": "\"mongolian shitposting\"",
+        "benign_explanation": "The user could be referencing a specific internet subculture or meme that is not widely known."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [
+      {
+        "type": "Ad Hominem (Implied)",
+        "quote": "mongolian shitposting",
+        "correction": "The statement appears to be a derogatory remark targeting a group (Mongolians) rather than addressing any specific argument or idea. To avoid this, focus on the content of the 'shitposting' itself, not the perceived origin or association with a particular group."
+      }
+    ],
+    "cognitive_biases": [
+      {
+        "bias": "Out-group Homogeneity Bias",
+        "confidence": 0.6
+      },
+      {
+        "bias": "Prejudice",
+        "confidence": 0.7
+      }
+    ],
+    "epistemic_uncertainty": 0.4
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.3,
+    "suggested_vibe": "edgy, internet subculture"
+  },
+  "sovereign_local": {
+    "local_findings": [],
+    "overall_risk_score": 0.1,
+    "engine": "SOVEREIGN_LOCAL_V1"
+  }
+}

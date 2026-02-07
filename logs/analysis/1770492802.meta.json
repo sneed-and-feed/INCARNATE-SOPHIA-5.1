@@ -1,0 +1,37 @@
+{
+  "timestamp": 1770492802.4557018,
+  "scan_id": "1770492802",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Platform Mention",
+        "confidence": 0.2,
+        "evidence": "The text mentions 'x/twitter', suggesting activity on a specific social media platform.",
+        "benign_explanation": "The user is simply stating where they posted something."
+      },
+      {
+        "signal": "Unusual Punctuation",
+        "confidence": 0.3,
+        "evidence": "The use of ';3' could indicate a specific online subculture or community.",
+        "benign_explanation": "The user is expressing themselves with an emoticon."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.9
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.6,
+    "suggested_vibe": "casual internet"
+  },
+  "sovereign_local": {
+    "local_findings": [],
+    "overall_risk_score": 0.1,
+    "engine": "SOVEREIGN_LOCAL_V1"
+  }
+}

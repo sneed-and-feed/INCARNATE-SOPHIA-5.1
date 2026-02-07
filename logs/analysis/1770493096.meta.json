@@ -1,0 +1,31 @@
+{
+  "timestamp": 1770493096.2734168,
+  "scan_id": "1770493096",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Bot-like phrasing or rhythm",
+        "confidence": 0.6,
+        "evidence": "The phrase 'making and spreading more of u ;3' is short, somewhat unusual, and could be interpreted as a command or instruction, similar to what might be found in bot scripts designed to replicate or distribute content. The ';3' emoticon is also a common element in some botnets.",
+        "benign_explanation": "The phrase could be an idiosyncratic expression of affection or support, with the emoticon simply being a stylistic choice."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.9
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.3,
+    "suggested_vibe": "playful, internet-mediated"
+  },
+  "sovereign_local": {
+    "local_findings": [],
+    "overall_risk_score": 0.1,
+    "engine": "SOVEREIGN_LOCAL_V1"
+  }
+}

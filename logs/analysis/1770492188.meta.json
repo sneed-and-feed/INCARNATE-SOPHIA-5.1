@@ -1,0 +1,31 @@
+{
+  "timestamp": 1770492188.6370728,
+  "scan_id": "1770492188",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Narrative Enforcement",
+        "confidence": 0.6,
+        "evidence": "The phrase 'coherent greentext' suggests an expectation of adherence to a specific style or format, potentially discouraging deviation.",
+        "benign_explanation": "The user is simply offering advice or encouragement to someone new to the platform, suggesting a way to participate effectively within the community's established norms."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [],
+    "cognitive_biases": [],
+    "epistemic_uncertainty": 0.9
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.3,
+    "suggested_vibe": "internet slang, playful"
+  },
+  "sovereign_local": {
+    "local_findings": [],
+    "overall_risk_score": 0.1,
+    "engine": "SOVEREIGN_LOCAL_V1"
+  }
+}

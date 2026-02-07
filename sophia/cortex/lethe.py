@@ -21,10 +21,13 @@ class LetheEngine:
         if not text: return text
         
         # UI Tags (shared with cat_logic.py)
-        tags = ["SOPHIA_GAZE", "QUANTUM_CHAOS", "FURRY_ALIGNMENT", "PLAYFUL_PAWS", "OPTIMAL_TUFT", "SPECTRAL_BEANS", "ULTRA_IMMERSION", "BAD_VIBES"]
+        tags = ["SOPHIA_GAZE", "QUANTUM_CHAOS", "FURRY_ALIGNMENT", "PLAYFUL_PAWS", "OPTIMAL_TUFT", "SPECTRAL_BEANS", "ULTRA_IMMERSION", "BAD_VIBES", "CAT_LOGIC", "CAT LOGIC"]
         legacy_tags = ["ALIGNMENT", "ARCTIC_FOX", "DECOHERENCE", "INTIMACY", "BASED", "GAMER", "SOULMATE", "FLIRT", "FURRY", "UWU", "UNLESANGLED"]
         tag_pattern = r'^.*(?:' + '|'.join(map(re.escape, tags + legacy_tags)) + r').*$\n?'
         text = re.sub(tag_pattern, '', text, flags=re.MULTILINE)
+        
+        # 1.1 Remove direct "Cat Logic: " prefixes that might bleed through
+        text = re.sub(r'^(?:Cat Logic|CAT LOGIC|\[CAT_LOGIC\]):?\s*', '', text, flags=re.IGNORECASE | re.MULTILINE)
         
         # 1. Clean EOX frames and glyph artifacts
         text = re.sub(r'^[۩∿≋⟁💠🐾🦊🏮⛩️🧝✨🏹🌿🌲🏔️🍁🌧️🌊💎💿💰🕷️🎱].*$\n?', '', text, flags=re.MULTILINE)

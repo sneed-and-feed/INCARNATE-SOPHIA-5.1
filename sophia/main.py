@@ -237,7 +237,7 @@ class SophiaMind:
             # self.vibe.print_system(f"Metabolic cycle complete. Pruned {pruned} shards.", tag="LETHE")
 
     def get_recent_context(self):
-        return "\n".join([f"{m.get('meta', 'unknown')}: {m.get('content')}" for m in self.memory_bank])
+        return "\n".join([f"[{m.get('meta', 'unknown').upper()}] {m.get('content')}" for m in self.memory_bank])
 
     # --- QUANTUM VALIDATION (Weakness #4 Fix) ---
     def _validate_quantum_state(self, q_state):
@@ -1023,8 +1023,8 @@ async def main():
     from rich.align import Align
 
     banner = Panel(
-        Align.center("[matrix]🐱 I N C A R N A T E - S O P H I A   5 . 2 . 4   O N L I N E[/matrix]"),
-        subtitle="[ophane]Protocol: CRYSTALLINE CORE (HARMONIC RECTIFICATION + HEPTAD GHOSTMESH)[/ophane]",
+        Align.center("[matrix]🐱 I N C A R N A T E - S O P H I A   5 . 2 . 4 . 1   O N L I N E[/matrix]"),
+        subtitle="[ophane]Protocol: CRYSTALLINE CORE (HARMONIC RECTIFICATION + LOOP DAMPER)[/ophane]",
         border_style="ophane",
         padding=(1, 2)
     )

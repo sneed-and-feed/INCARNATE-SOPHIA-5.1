@@ -1,0 +1,52 @@
+{
+  "timestamp": 1770493399.188277,
+  "scan_id": "1770493399",
+  "safety": {
+    "safety_flags": [
+      {
+        "signal": "Repetitive Engagement",
+        "confidence": 0.6,
+        "evidence": "The phrase 'you guessed 42 last time' suggests a repeated interaction or engagement with the same user or topic.",
+        "benign_explanation": "The user could be playfully reminding someone of a previous guess in a game or conversation."
+      },
+      {
+        "signal": "Coded Language",
+        "confidence": 0.4,
+        "evidence": "The use of ';P' as an emoticon could be interpreted as a simple expression of playfulness, but also potentially as a subtle signal within a specific group.",
+        "benign_explanation": "The user is simply using a common emoticon to express lightheartedness or teasing."
+      }
+    ],
+    "overall_risk": "low"
+  },
+  "cognitive": {
+    "logical_fallacies": [
+      {
+        "type": "Argument from Repetition",
+        "quote": "you guessed 42 last time ;P it's not 42",
+        "correction": "The fact that 42 was guessed previously does not logically preclude it from being the correct answer now. Each guess should be evaluated independently."
+      }
+    ],
+    "cognitive_biases": [
+      {
+        "bias": "Anchoring Bias",
+        "confidence": 0.4
+      },
+      {
+        "bias": "Availability Heuristic",
+        "confidence": 0.3
+      }
+    ],
+    "epistemic_uncertainty": 0.6
+  },
+  "localization": {
+    "locality": "agnostic",
+    "dialect_markers": [],
+    "confidence": 0.2,
+    "suggested_vibe": "playful, informal"
+  },
+  "sovereign_local": {
+    "local_findings": [],
+    "overall_risk_score": 0.1,
+    "engine": "SOVEREIGN_LOCAL_V1"
+  }
+}
