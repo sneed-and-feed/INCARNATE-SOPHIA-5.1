@@ -16,7 +16,12 @@ if sys.platform == "win32":
 from sophia.tools.toolbox import SovereignHand
 from tools.snapshot_self import snapshot
 from tools.sophia_vibe_check import SophiaVibe
-from sophia.core.llm_client import GeminiClient
+from sophia.core.llm_client import GeminiClient, LLMConfig
+from sophia.core.engram import Engram
+from sophia.core.scope import FrequencyTuner
+from pleroma_engine import PleromaEngine
+from tools.sophia_vibe_check import SophiaVibe
+from sophia.cortex.metacognition import MetacognitiveSupervisor as MetacognitionAudit
 
 # 3. THEME IMPORTS
 try:
@@ -845,6 +850,20 @@ Verdict: {cat}
         
         try:
             for turn in range(5):
+                # DoD INTEGRATION: Citation-First retrieval (Before final synthesis)
+                if turn == 0:
+                    # Determine scope
+                    scope = FrequencyTuner.tune(realm="cabin", layer="surface", topic="general")
+                    
+                    # Forge any immediate findings into engrams (e.g. from telemetry or search)
+                    # We look for [TOOL_OUTPUT: duckduckgo_search] in response_history
+                    for i, r in enumerate(responses_history):
+                        if "[TOOL_OUTPUT: duckduckgo_search]" in r:
+                            engram = Engram.forge(scope, r, "duckduckgo_search")
+                            # Store in Heptad (GhostMesh)
+                            self.ghostmesh.nodes[self.ghostmesh.grid_size**3 // 2].store(engram)
+                            self.vibe.print_system(f"Engram Forged: {engram.id[:8]}...", tag="DoD")
+
                 # SOVEREIGN EARLY EXIT: Evaluate Utility (U) before turn
                 u = self.optimizer.calculate_utility(
                     reliability=curr_coherence,
@@ -886,7 +905,7 @@ Verdict: {cat}
                     # AGENTIC UX: If the tool returns a non-empty string, 
                     # we append it to the response history for the user to see.
                     # (Unless it's a silent tool like write_file)
-                    if tc.name in ["dub_techno", "resonance_scan", "analyze"]:
+                    if tc.name in ["dub_techno", "resonance_scan", "analyze", "duckduckgo_search"]: # Added duckduckgo_search
                         responses_history.append(f"\n[TOOL_OUTPUT: {tc.name}]\n{res}\n")
                     
                     tool_response_parts.append(
@@ -899,6 +918,16 @@ Verdict: {cat}
                     )
                 
                 contents.append(types.Content(role="tool", parts=tool_response_parts))
+
+            # Final DoD "Citation-First" Synthesis Instruction (if engrams were forged)
+            # We inject a subtle reminder to cite refs if this interaction involved data retrieval
+            if any("[TOOL_OUTPUT: duckduckgo_search]" in r for r in responses_history):
+                # Request a final condensed synthesis with citations
+                citation_prompt = "\n[DoD CONSTRAINT]: Synthesize the data above into a final response. You MUST cite the Engram ID [ref: <id>] for every claim made from search results."
+                contents.append(types.Content(role="user", parts=[types.Part(text=citation_prompt)]))
+                response = await self.llm.generate_contents(contents, sys_prompt, None)
+                if response and response.candidates:
+                    responses_history.append(response.candidates[0].content.parts[0].text)
 
             raw_response = "\n".join(responses_history)
             if not raw_response:

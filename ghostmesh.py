@@ -12,6 +12,7 @@ Implements:
 
 import math
 import random
+import os
 try:
     from bumpy import BumpyArray
     from flumpy import FlumpyArray
@@ -33,6 +34,20 @@ class SovereignNode:
         self.state = FlumpyArray(np.array([random.gauss(0, 0.1) for _ in range(dim)]), coherence=1.0)
         self.neighbors = []
         self.seeds = [] # [GARDEN] Planted intents
+        self.engrams = [] # [DoD] The Memory Bank (Immutable Assets)
+        self.vectors = [] # [DoD] The Search Index
+
+    def store(self, engram):
+        """[DoD] Securely stores an Engram in this node."""
+        self.engrams.append(engram)
+        
+        # Determine local storage path (Windows-safe variant of /mnt/ramdisk)
+        storage_path = os.path.join("logs", "ossuary", "engrams")
+        os.makedirs(storage_path, exist_ok=True)
+        
+        filepath = os.path.join(storage_path, f"{engram.id}.json")
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(engram.to_json())
 
     def set_neighbors(self, all_nodes, limit=3):
         """Identify 6 Von Neumann neighbors in 3D grid."""
